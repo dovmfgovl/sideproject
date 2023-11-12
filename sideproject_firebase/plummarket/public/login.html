@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="main.css">
+  <script src="loginJoin.js" defer></script>
+</head>
+<body>
+  <script src="/__/firebase/8.6.5/firebase-app.js"></script>
+  <script src="/__/firebase/8.6.5/firebase-auth.js"></script>
+  <script src="/__/firebase/8.6.5/firebase-firestore.js"></script>
+  <script src="/__/firebase/8.6.5/firebase-storage.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBgNW3b8Bk7jP27L89_j6oOkAZ8MLAFdD0",
+      authDomain: "plummarket-82788.firebaseapp.com",
+      projectId: "plummarket-82788",
+      storageBucket: "plummarket-82788.appspot.com",
+      messagingSenderId: "7073688624",
+      appId: "1:7073688624:web:6d7c90cf89752d6a5491f5"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">PlumMarket</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <form class="d-flex" role="search">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </li>
+        <li class="nav-item" id="login">
+          <a class="nav-link active" aria-current="page" href="login.html">로그인</a>
+        </li>
+        </ul>
+        <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button> -->
+      </form>
+    </div>
+  </div>
+</nav>
+
+  <!-- 로그인 폼 코드 -->
+  <div class="container mt-3" id="login-form">
+    <div class="mb-3">
+      <input type="email" class="form-control" placeholder="email" id="email-login">
+    </div>
+    <div class="mb-3">
+      <input type="password" class="form-control" placeholder="pw" id="pw-login">
+    </div>
+    <button type="submit" class="btn btn-success" id="login-btn">로그인</button>
+
+    <!-- 회원가입으로 이동하는 버튼 -->
+    <button type="button" class="btn btn-link" id="register-btn">회원가입</button>
+  </div>
+
+  <!-- 회원가입 폼 코드 -->
+  <div class="container mt-3" id="register-form">
+    <div class="mb-3">
+      <input type="text" class="form-control" placeholder="name" id="name-new">
+    </div>
+    <div class="mb-3">
+      <input type="email" class="form-control" placeholder="email" id="email-new">
+    </div>
+    <div class="mb-3">
+      <input type="password" class="form-control" placeholder="pw" id="pw-new">
+    </div>
+    <button type="submit" class="btn btn-primary" id="register-submit-btn">가입하기</button>
+
+    <!-- 뒤로 가기 버튼 -->
+    <button type="button" class="btn btn-link" id="back-to-login-btn">로그인으로 돌아가기</button>
+  </div>
+
+  <script>
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+  </script>
+</body>
+</html>
