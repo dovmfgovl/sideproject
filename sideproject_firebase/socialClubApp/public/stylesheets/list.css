@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+  /* border: 1px solid red; */
+}
+
+/* ul태그 작성 */
+.videos {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  list-style: none;
+  padding-left: 0px;
+  margin: 0px;
+  gap: 14px;
+}
+
+/* li태그 css작성 */
+.video {
+  display: flex; /* flex 방향 디폴트는 row */
+  align-items: center;
+  border: 1px solid lightgray;
+  box-shadow: 3px 3px 5px 0px rgba(191, 191, 191, 0.53);
+  transition: transform 250ms ease-in;
+  cursor: pointer;
+}
+
+.video:hover {
+  transform: scale(1.02);/* 마우스 오버 시 확대처리 */
+}
+
+.thumbnail {
+  width: 40%;
+}
+
+.title,
+.chnnelTitle {
+  margin: 10px;
+  font-size: 1.0rem;
+}
+
+.chnnelTitle{
+  font-size: 0.8rem;
+}
