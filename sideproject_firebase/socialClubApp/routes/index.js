@@ -8,6 +8,10 @@ router.get('/clubList/:id', function(req, res, next) {
   let id = req.params.id
   res.render('index', { title: '클럽목록' , pageName: "clubList.ejs", id:id});
 });
+router.get('/clubMain', function(req, res, next) {
+  let id = req.params.id
+  res.render('index', { title: '클럽메인' , pageName: "clubMain.ejs"});
+});
 // router.get('/login', function(req, res, next) { //app.js -> path 라이브러리 __dirname, views
 //   res.render('index', { title: '로그인', pageName:"auth/login.ejs" });
 // });

@@ -63,6 +63,10 @@
       location.href = `/clubList/:${pressedBtn}`;
     })
 
+    $(".club-container").on("click", (e)=>{
+      location.href = `/clubMain`;
+    })
+
     // const q = query(collection(db, "club-category-study"), where("클럽명", "==", "대범한스터디"));
     // const querySnapshot = await getDocs(q);
     // querySnapshot.forEach((doc) => {

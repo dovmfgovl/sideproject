@@ -1,0 +1,54 @@
+
+<div class="current-clubInfo">
+  <!-- 현재 동호회명 -->
+</div>
+
+<div class="club-information">
+  <!-- 클럽 정보 출력 -->
+</div>
+
+<div class="clubMain-property">
+  <!-- <ul class="nav nav-underline">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="#">Board</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Album</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Comment</a>
+    </li>
+  </ul> -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="#">Board</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Album</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Comment</a>
+    </li>
+  </ul>
+</div>
+
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import {getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  const db = getFirestore(app);
+
+  const querySnapshot = await getDocs(collection(db, `cclub-category-${id}`));
+  querySnapshot.forEach((doc) => {
+
+    const template = `
+    <div class="current-clubInfo">
+      <div class="flex-grow-1 p-4">
+            <h5 class="club-name">${doc.data().club_name}</h5>
+            <p class="club-info">${doc.data().club_info}</p>
+        </div>
+    </div>`;
+    console.log(doc.id, " => ", doc.data());
+    $('.current-clubInfo').append(template);
+  })
+
+</script>
