@@ -1,6 +1,3 @@
 {
-  "editor.fontSize": 15,
-  "editor.tokenColorCustomizations": {
-    "comments": "#eebb3e"
-  }
+  "liveServer.settings.port": 5501
 }

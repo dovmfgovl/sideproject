@@ -1,0 +1,116 @@
+<!-- 카테고리 선택(home) -->
+
+<div>
+  관심분야
+</div>
+
+<ul class="categories">
+  <li class="container">
+    <div class="category" id="study">
+      <div class="card">
+        <img src="/images/8665638_pen_ruler_icon.png" alt="">
+        <p class="card-title">Study</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="sports">
+      <div class="card">
+        <img src="/images/8665132_basketball_sport_icon.png" alt="mug">
+        <p class="card-title">Sports</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="pet">
+      <div class="card">
+        <img src="/images/8665281_dog_animal_icon.png" alt="mug">
+        <p class="card-title">Pet</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="vehicle">
+      <div class="card">
+      <img src="/images/8664959_car_rear_icon.png" alt="mug">
+        <p class="card-title">Vehicle</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="game">
+      <div class="card">
+        <img src="/images/8665293_dice_game_icon.png" alt="mug">
+        <p class="card-title">Game</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="cafts">
+      <div class="card" >
+        <img src="/images/4175579_depiction_design_drawing_plan_prototype_icon.png" alt="mug">
+        <p class="card-title">Crafts</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="beauty">
+      <div class="card" >
+      <img src="/images/8665855_scissors_tool_icon.png" alt="mug">
+        <p class="card-title">Beauty</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="music">
+      <div class="card" >
+        <img src="/images/9057126_piano_icon.png" alt="mug">
+        <p class="card-title">Music</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="book">
+      <div class="card">
+        <img src="/images/8665118_book_open_icon.png" alt="mug">
+        <p class="card-title">Book</p>
+      </div>
+    </div>
+  </li>
+<!--   <li class="container">
+    <div class="category" id="society">
+      <div class="card">
+        <img src="/images/8665604_mug_hot_icon.png" alt="mug">
+        <p class="card-title">Society</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="picture">
+      <div class="card">
+        <img src="/images/8665549_image_icon.png" alt="mug">
+        <p class="card-title">Picture</p>
+      </div>
+    </div>
+  </li>
+  <li class="container">
+    <div class="category" id="travel">
+      <div class="card">
+        <img src="/images/6811929_adventure_backpack_bag_baggage_tourism_icon.png" alt="mug">
+        <p class="card-title">Travel</p>
+      </div>
+    </div>
+  </li> -->
+</ul>
+
+<script>
+  $(".container #study").on("click",(e)=>location.href = "/clubList/:study")
+  $(".container #sports").on("click",(e)=>location.href = "/clubList/:sports")
+  $(".container #pet").on("click",(e)=>location.href = "/clubList/:pet")
+  $(".container #vehicle").on("click",(e)=>location.href = "/clubList/:vehicle")
+  $(".container #game").on("click",(e)=>location.href = "/clubList/:game")
+  $(".container #crafts").on("click",(e)=>location.href = "/clubList/:crafts")
+  $(".container #beauty").on("click",(e)=>location.href = "/clubList/:beauty")
+  $(".container #music").on("click",(e)=>location.href = "/clubList/:music")
+  $(".container #book").on("click",(e)=>location.href = "/clubList/:book")
+</script>

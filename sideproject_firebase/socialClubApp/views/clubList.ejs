@@ -1,0 +1,72 @@
+<!-- 클럽리스트 -->
+
+<div class="current-category">
+  <!-- 현재 카테고리 -->
+</div>
+
+<div class="club-categories">
+    <div class="club-category bg-secondary" id="study">study</div>
+    <div class="club-category bg-secondary" id="sports">sports</div>
+    <div class="club-category bg-secondary" id="pet">pet</div>
+    <div class="club-category bg-secondary" id="vehicle">vehicle</div>
+    <div class="club-category bg-secondary" id="game">game</div>
+    <div class="club-category bg-secondary" id="crafts">crafts</div>
+    <div class="club-category bg-secondary" id="beauty">beauty</div>
+    <div class="club-category bg-secondary" id="book">book</div>
+</div>
+    
+<div class="club-list">
+  <!-- 클럽리스트 목록 들어갈곳-->
+</div>
+
+<!-- 페이지 -->
+<div class="text-center mt-2">
+  <button class="btn btn-secondary btn-sm px-5" id="prev">이전</button>
+  <span id="page" class="px-3">1/10</span>
+  <button class="btn btn-secondary btn-sm px-5" id="next">다음</button>
+</div>
+
+
+  <script type="module">
+    import { app } from "/javascripts/firebase.js";
+    import { getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    const db = getFirestore(app);
+    const id = "<%=id%>".slice(1);
+    console.log(id);
+    $(".current-category").html(`${id}`);//현재 카테고리 화면에 출력
+
+    const querySnapshot = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data().club_thumbnail);
+      let thumbnail = 'https://via.placeholder.com/150';//엑박이미지
+
+      if(doc.data().club_thumbnail){//이미지가 있으면 썸네일 사용 없으면 엑박이미지 사용
+        thumbnail = doc.data().club_thumbnail;
+      }
+
+      const template =`
+      <div class="club-container">
+        <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
+        <div class="flex-grow-1 p-4">
+            <h5 class="club-name">${doc.data().club_name}</h5>
+            <p class="club-info">${doc.data().club_info}</p>
+            <p class="float-end">❤️0</p>
+        </div>
+      </div>
+      `
+    console.log(doc.id, " => ", doc.data());
+    $('.club-list').append(template);
+    });
+
+    $(".club-categories").on("click",(e)=>{//버튼 눌렸을 때 페이지 이동
+      const pressedBtn = e.target.id;
+      location.href = `/clubList/:${pressedBtn}`;
+    })
+
+    // const q = query(collection(db, "club-category-study"), where("클럽명", "==", "대범한스터디"));
+    // const querySnapshot = await getDocs(q);
+    // querySnapshot.forEach((doc) => {
+    //   // doc.data() is never undefined for query doc snapshots
+    //   console.log(doc.id, " => ", doc.data());
+    // });
+  </script>

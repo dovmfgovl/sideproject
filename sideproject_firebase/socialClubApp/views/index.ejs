@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>소소모임</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel='stylesheet' href='/stylesheets/list.css' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
   </head>
   <body>
-    <%-include("header.ejs") %>
-    <%-include("clubHome.ejs")%>
-    <%-include("footer.ejs") %>
+    <div class="container">
+      <%-include("header.ejs")%>
+      <%-include(pageName)%>
+      <%-include("footer.ejs")%>
+    </div>
   </body>
+  <script>
+    
+  </script>
 </html>
-<!-- <script type="module">
-  import { app } from "/javascripts/firebase.js";
-  import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-  const db = getFirestore(app);
-  const querySnapshot = await getDocs(collection(db, "club"));
-  console.log(querySnapshot.docs);
-</script> -->

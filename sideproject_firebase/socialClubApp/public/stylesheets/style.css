@@ -1,8 +1,102 @@
+*{
+  box-sizing: border-box;
+  border: 1px solid red;
+}
 body {
-  padding: 50px;
+  padding: 5%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
-a {
+/* a {
   color: #00B7FF;
+} */
+/* Home card */
+.categories{
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  list-style: none;
+  padding-left: 0px;
+  margin: 20px 0px 0 0;
+  gap: 14px;
+}
+
+.category {  
+  /* display: flex; */
+  align-items: center;
+  border: 1px solid lightgray;
+  border-radius: 15px;
+  box-shadow: 3px 3px 5px 0px rgba(191, 191, 191, 0.53);
+  transition: transform 250ms ease-in;
+  cursor: pointer;
+  background-color: darkgray;
+}
+
+.category:hover{
+  transform: scale(1.02);
+}
+
+.card{
+  padding: 20px;
+  margin: 10px;
+
+}
+
+.card img{
+  width: 128px;
+  height: 128px;
+  margin: auto;
+}
+
+.card-title{
+  margin: 0;
+  height: 30px;
+}
+/* clubList */
+.club-container {
+  display: flex;
+  padding: 10px;
+}
+.thumbnail {
+  max-width: 200px;
+  width: 100%;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+}
+.club-container .club-info {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.club-name{
+  cursor: pointer;
+}
+
+.club-categories{
+  display: flex;
+  justify-content: space-between;
+  padding:10px;
+} 
+
+.club-category{
+  text-align: center;
+  width: 10%;
+  margin: 0 10px 0 10px;
+  padding: 5px;
+  border: none;
+  border-radius:7px;
+  cursor: pointer;
+  background-color: rgb(232, 223, 241);
+}
+
+.club-category:hover{
+  transform: scale(1.02);
+  background-color: darkgray;
+}
+.current-category{
+  height: 50px;
+  padding: 0;
+  margin: 10px 0 10px 0;
+  text-align: center;
+  font-size: 30px;
 }
