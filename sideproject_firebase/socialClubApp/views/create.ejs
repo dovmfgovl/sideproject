@@ -1,98 +1,104 @@
 <div class="container">
-  <div class='create-meeting'>모임분야</div>
-    <select id="sel-category">
-      <option value="study">공부</option>
-      <option value="sports">운동</option>
-      <option value="pet">펫</option>
-      <option value="vehicle">차, 오토바이</option>
-      <option value="game">게임</option>
-      <option value="crafts">공예,미술</option>
-      <option value="beauty">미용</option>
-      <option value="music">음악</option>
-      <option value="book">독서</option>
-    </select>
-  <div class='create-meeting'>활동 지역</div>
-  <input type="text"  id="get-address" placeholder="주소">
-  <input type="button" onclick="execPostcode()" value="주소 검색"><br>
-  <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
-  <textarea placeholder="상세주소" class="form-control mt-2" id="club-loc-detail"></textarea>
-  <div class='create-meeting'>모임 이름</div>
-  <textarea placeholder="모임 이름" class="form-control mt-2" id="club-name"></textarea>
-  <div class='create-meeting'>모임 목표</div>
-  <textarea placeholder="모임의 목표를 설명해주세요" class="form-control mt-2" id="club-aim"></textarea>
-  <button class="btn btn-secondary mt-3" id="btn-create">모임등록</button>
-</div>
-
-
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6e4eb52d08148c1e003b66a3b9275b81&libraries=services"></script>
-<script type="module">
-///////////////////////////////////////////////////////////////////////////////////
-import { app } from "/javascripts/firebase.js";
-import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-const db = getFirestore(app);
-
-$("#btn-create").on("click",()=>{
-    console.log("작성완료 버튼눌렸다.");
-    const category = document.querySelector("#sel-category").value;
-    const data = {
-          club_category: category,
-          club_loc: document.querySelector("#get-address").value,
-          club_loc_detail: document.querySelector("#club-loc-detail").value,
-          club_name: document.querySelector("#club-name").value,
-          club_aim: document.querySelector("#club-aim").value,
+    <div class='create-meeting'>모임분야</div>
+      <select id="sel-category">
+        <option value="study">공부</option>
+        <option value="sports">운동</option>
+        <option value="pet">펫</option>
+        <option value="vehicle">차, 오토바이</option>
+        <option value="game">게임</option>
+        <option value="crafts">공예,미술</option>
+        <option value="beauty">미용</option>
+        <option value="music">음악</option>
+        <option value="book">독서</option>
+      </select>
+    <div class='create-meeting'>활동 지역</div>
+    <input type="text"  id="get-address" placeholder="주소">
+    <input type="button" onclick="execPostcode()" value="주소 검색"><br>
+    <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+    <textarea placeholder="상세주소" class="form-control mt-2" id="club-loc-detail"></textarea>
+    <div class='create-meeting'>모임 이름</div>
+    <textarea placeholder="모임 이름" class="form-control mt-2" id="club-name"></textarea>
+    <div class='create-meeting'>모임 목표</div>
+    <textarea placeholder="모임의 목표를 설명해주세요" class="form-control mt-2" id="club-aim"></textarea>
+    <button class="btn btn-secondary mt-3" id="btn-create">모임등록</button>
+  </div>
+  
+  
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=565e87d4d275f2f9ad51401b785b8ad2&libraries=services"></script>
+  <script type="module">
+  ///////////////////////////////////////////////////////////////////////////////////
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  const db = getFirestore(app);
+  
+  $("#btn-create").on("click",()=>{
+      console.log("작성완료 버튼눌렸다.");
+      const category = document.querySelector("#sel-category").value;
+      const data = {
+            club_category: category,
+            club_loc: document.querySelector("#get-address").value,
+            club_loc_detail: document.querySelector("#club-loc-detail").value,
+            club_name: document.querySelector("#club-name").value,
+            club_aim: document.querySelector("#club-aim").value,
+            };
+      console.log(data); 
+      const docRef = addDoc(collection(db,`club-category-${category}`), data)
+            .then(async(docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+                const boardRef = doc(collection(db, `club-category-${category}`, docRef.id, "board"));
+                await setDoc(boardRef,{test:"게시판생성문자"})
+                const albumRef = doc(collection(db, `club-category-${category}`, docRef.id, "album"));
+                await setDoc(albumRef,{test:"앨범생성문자"});
+                const scheduleRef = doc(collection(db, `club-category-${category}`, docRef.id, "schedule"));
+                await setDoc(scheduleRef,{test:"일정관리생성문자"});
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+    })
+  </script>
+  <script>
+  /////////////////////////////////////////////////////////////////////////////////////
+      var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+          mapOption = {
+              center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+              level: 5 // 지도의 확대 레벨
           };
-    console.log(data); 
-    const docRef = addDoc(collection(db,`club-category-${category}`), data)
-          .then((docRef) => {
-              console.log("Document written with ID: ", docRef.id);
-          })
-          .catch((error) => {
-              console.error("Error adding document: ", error);
-          });
-  })
-</script>
-<script>
-/////////////////////////////////////////////////////////////////////////////////////
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapOption = {
-            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 5 // 지도의 확대 레벨
-        };
-
-    //지도를 미리 생성
-    var map = new daum.maps.Map(mapContainer, mapOption);
-    //주소-좌표 변환 객체를 생성
-    var geocoder = new daum.maps.services.Geocoder();
-    //마커를 미리 생성
-    var marker = new daum.maps.Marker({
-        position: new daum.maps.LatLng(37.537187, 127.005476),
-        map: map
-    });
-
-    function execPostcode(){
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var addr = data.address; // 최종 주소 변수
-                // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("get-address").value = addr;
-                // 주소로 상세 정보를 검색
-                geocoder.addressSearch(data.address, function(results, status) {
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === daum.maps.services.Status.OK) {
-                        var result = results[0]; //첫번째 결과의 값을 활용
-                        // 해당 주소에 대한 좌표를 받아서
-                        var coords = new daum.maps.LatLng(result.y, result.x);
-                        // 지도를 보여준다.
-                        mapContainer.style.display = "block";
-                        map.relayout();
-                        // 지도 중심을 변경한다.
-                        map.setCenter(coords);
-                        // 마커를 결과값으로 받은 위치로 옮긴다.
-                        marker.setPosition(coords)
-                    }
-                });
-            }
-        }).open();
-    }
-</script>
+  
+      //지도를 미리 생성
+      var map = new daum.maps.Map(mapContainer, mapOption);
+      //주소-좌표 변환 객체를 생성
+      var geocoder = new daum.maps.services.Geocoder();
+      //마커를 미리 생성
+      var marker = new daum.maps.Marker({
+          position: new daum.maps.LatLng(37.537187, 127.005476),
+          map: map
+      });
+  
+      function execPostcode(){
+          new daum.Postcode({
+              oncomplete: function(data) {
+                  var addr = data.address; // 최종 주소 변수
+                  // 주소 정보를 해당 필드에 넣는다.
+                  document.getElementById("get-address").value = addr;
+                  // 주소로 상세 정보를 검색
+                  geocoder.addressSearch(data.address, function(results, status) {
+                      // 정상적으로 검색이 완료됐으면
+                      if (status === daum.maps.services.Status.OK) {
+                          var result = results[0]; //첫번째 결과의 값을 활용
+                          // 해당 주소에 대한 좌표를 받아서
+                          var coords = new daum.maps.LatLng(result.y, result.x);
+                          // 지도를 보여준다.
+                          mapContainer.style.display = "block";
+                          map.relayout();
+                          // 지도 중심을 변경한다.
+                          map.setCenter(coords);
+                          // 마커를 결과값으로 받은 위치로 옮긴다.
+                          marker.setPosition(coords)
+                      }
+                  });
+              }
+          }).open();
+      }
+  </script>
