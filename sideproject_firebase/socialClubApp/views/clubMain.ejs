@@ -1,10 +1,5 @@
-
 <div class="current-clubInfo">
-  <!-- 현재 동호회명 -->
-</div>
-
-<div class="club-information">
-  <!-- 클럽 정보 출력 -->
+  <!-- 현재 동호회명 & 클럽 정보 출력 -->
 </div>
 
 <div class="clubMain-property">
@@ -29,6 +24,9 @@
     <li class="nav-item">
       <a class="nav-link" href="#">Comment</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Schedule</a>
+    </li>
   </ul>
 </div>
 
@@ -36,12 +34,15 @@
   import { app } from "/javascripts/firebase.js";
   import {getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
   const db = getFirestore(app);
-
-  const querySnapshot = await getDocs(collection(db, `cclub-category-${id}`));
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+  console.log(category);
+  console.log(clubId);
+  const querySnapshot = await getDocs(collection(db, `club-category-${category}`));
   querySnapshot.forEach((doc) => {
 
     const template = `
-    <div class="current-clubInfo">
+    <div class="ocurrent-clubInf">
       <div class="flex-grow-1 p-4">
             <h5 class="club-name">${doc.data().club_name}</h5>
             <p class="club-info">${doc.data().club_info}</p>

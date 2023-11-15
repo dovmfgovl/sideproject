@@ -31,7 +31,7 @@
     import { app } from "/javascripts/firebase.js";
     import { getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     const db = getFirestore(app);
-    const id = "<%=id%>".slice(1);
+    const id = "<%=id%>";
     console.log(id);
     $(".current-category").html(`${id}`);//현재 카테고리 화면에 출력
 
@@ -45,7 +45,7 @@
       }
 
       const template =`
-      <div class="club-container">
+      <div class="club-container" id="${doc.id}">
         <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
         <div class="flex-grow-1 p-4">
             <h5 class="club-name">${doc.data().club_name}</h5>
@@ -57,14 +57,15 @@
     console.log(doc.id, " => ", doc.data());
     $('.club-list').append(template);
     });
-
+    
     $(".club-categories").on("click",(e)=>{//버튼 눌렸을 때 페이지 이동
       const pressedBtn = e.target.id;
       location.href = `/clubList/:${pressedBtn}`;
     })
-
+    
     $(".club-container").on("click", (e)=>{
-      location.href = `/clubMain`;
+      const clubId = e.currentTarget.id;
+      location.href = `/clubMain/${id}/${clubId}`;
     })
 
     // const q = query(collection(db, "club-category-study"), where("클럽명", "==", "대범한스터디"));
