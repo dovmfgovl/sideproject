@@ -4,6 +4,17 @@
   <!-- 현재 카테고리 -->
 </div>
 
+<div class="container">
+  <div class='search-area'>탐색범위</div>
+  <select id="sel-search-area">
+    <option value="5">5km</option>
+    <option value="10">10km</option>
+    <option value="30">30km</option>
+  </select>
+  <button id="btn-search-area">검색</button>
+</div>
+
+
 <div class="club-categories">
     <div class="club-category bg-secondary" id="study">study</div>
     <div class="club-category bg-secondary" id="sports">sports</div>
@@ -31,47 +42,82 @@
     import { app } from "/javascripts/firebase.js";
     import { getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     const db = getFirestore(app);
-    const id = "<%=id%>";
+    const id = "<%=id%>"
     console.log(id);
     $(".current-category").html(`${id}`);//현재 카테고리 화면에 출력
 
-    const querySnapshot = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data().club_thumbnail);
-      let thumbnail = 'https://via.placeholder.com/150';//엑박이미지
+    let searchArea = 5 //초기 설정된 검색반경 5km
+    console.log("검색범위는"+searchArea);
 
-      if(doc.data().club_thumbnail){//이미지가 있으면 썸네일 사용 없으면 엑박이미지 사용
-        thumbnail = doc.data().club_thumbnail;
+    const myLat = 37.39961291798142;
+    const myLng = 126.66890968957239;
+    
+    async function getClubList(area){
+      const querySnapshot = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data().club_thumbnail);
+        let thumbnail = 'https://via.placeholder.com/150';//엑박이미지
+  
+        if(doc.data().club_thumbnail){//이미지가 있으면 썸네일 사용 없으면 엑박이미지 사용
+          thumbnail = doc.data().club_thumbnail;
+        }
+        const template =`
+        <div class="club-container" id="${doc.id}">
+          <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
+          <div class="flex-grow-1 p-4">
+              <h5 class="club-name">${doc.data().club_name}</h5>
+              <p class="club-info">${doc.data().club_info}</p>
+              <p class="float-end">❤️0</p>
+          </div>
+        </div>
+        `
+      console.log(doc.id, " => ", doc.data());
+
+      const result = getDistanceFromLatLonInKm(myLat, myLng, doc.data().lat, doc.data().lng);
+      const distance = Math.round(result*1000)/1000;
+
+      console.log(Math.round(result*1000)/1000+"km");
+      
+      if(distance < area){//현재 위치에서 n km보다 가까우면 리스트에 출력
+        $('.club-list').append(template);
       }
 
-      const template =`
-      <div class="club-container" id="${doc.id}">
-        <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
-        <div class="flex-grow-1 p-4">
-            <h5 class="club-name">${doc.data().club_name}</h5>
-            <p class="club-info">${doc.data().club_info}</p>
-            <p class="float-end">❤️0</p>
-        </div>
-      </div>
-      `
-    console.log(doc.id, " => ", doc.data());
-    $('.club-list').append(template);
-    });
-    
+      });
+    }
+    getClubList(searchArea);
+
+
     $(".club-categories").on("click",(e)=>{//버튼 눌렸을 때 페이지 이동
       const pressedBtn = e.target.id;
-      location.href = `/clubList/:${pressedBtn}`;
+      console.log(pressedBtn);
+      location.href = `/clubList/${pressedBtn}`;
     })
-    
+
     $(".club-container").on("click", (e)=>{
       const clubId = e.currentTarget.id;
       location.href = `/clubMain/${id}/${clubId}`;
     })
 
-    // const q = query(collection(db, "club-category-study"), where("클럽명", "==", "대범한스터디"));
-    // const querySnapshot = await getDocs(q);
-    // querySnapshot.forEach((doc) => {
-    //   // doc.data() is never undefined for query doc snapshots
-    //   console.log(doc.id, " => ", doc.data());
-    // });
+    $("#btn-search-area").on("click", (e)=>{
+      e.preventDefault();
+      $('.club-list').html("");
+      const area = document.querySelector("#sel-search-area").value
+      console.log(area+"km선택됨");
+      getClubList(area);
+    })
+
+    //위도 경도로 거리 구하는 함수
+    function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
+      function deg2rad(deg) {
+          return deg * (Math.PI/180)
+      }
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lng2-lng1);
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c; // Distance in km
+      return d; 
+    }
+    
   </script>

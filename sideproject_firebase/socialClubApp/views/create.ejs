@@ -13,7 +13,7 @@
       </select>
     <div class='create-meeting'>활동 지역</div>
     <input type="text"  id="get-address" placeholder="주소">
-    <input type="button" onclick="execPostcode()" value="주소 검색"><br>
+    <input type="button" id="btn_search" value="주소 검색"><br>
     <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
     <textarea placeholder="상세주소" class="form-control mt-2" id="club-loc-detail"></textarea>
     <div class='create-meeting'>모임 이름</div>
@@ -26,6 +26,7 @@
   
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=565e87d4d275f2f9ad51401b785b8ad2&libraries=services"></script>
+  
   <script type="module">
   ///////////////////////////////////////////////////////////////////////////////////
   import { app } from "/javascripts/firebase.js";
@@ -34,6 +35,8 @@
   
   $("#btn-create").on("click",()=>{
       console.log("작성완료 버튼눌렸다.");
+      console.log("위도는"+lat);
+      console.log("경도는"+lng);
       const category = document.querySelector("#sel-category").value;
       const data = {
             club_category: category,
@@ -41,6 +44,8 @@
             club_loc_detail: document.querySelector("#club-loc-detail").value,
             club_name: document.querySelector("#club-name").value,
             club_aim: document.querySelector("#club-aim").value,
+            lat: lat,
+            lng: lng,
             };
       console.log(data); 
       const docRef = addDoc(collection(db,`club-category-${category}`), data)
@@ -57,8 +62,6 @@
                 console.error("Error adding document: ", error);
             });
     })
-  </script>
-  <script>
   /////////////////////////////////////////////////////////////////////////////////////
       var mapContainer = document.getElementById('map'), // 지도를 표시할 div
           mapOption = {
@@ -75,6 +78,13 @@
           position: new daum.maps.LatLng(37.537187, 127.005476),
           map: map
       });
+  
+      document.querySelector("#btn_search").addEventListener("click",()=>{
+        execPostcode();
+      })
+  
+      let lat;//위도 받을 변수
+      let lng;//경도 받을 변수
   
       function execPostcode(){
           new daum.Postcode({
@@ -94,6 +104,9 @@
                           map.relayout();
                           // 지도 중심을 변경한다.
                           map.setCenter(coords);
+                          const center = map.getCenter();
+                          lat = center.getLat()
+                          lng = center.getLng()
                           // 마커를 결과값으로 받은 위치로 옮긴다.
                           marker.setPosition(coords)
                       }
@@ -101,4 +114,5 @@
               }
           }).open();
       }
+  
   </script>
