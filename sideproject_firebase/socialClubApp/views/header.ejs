@@ -1,32 +1,54 @@
-<nav class="navbar navbar-expand-lg bg-success navbar-dark">
+<nav class="navbar navbar-expand-lg bg-secondary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">소소모임</a>
+    <a class="navbar-brand" href="#">소소모임</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="">Home</a>
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
+        <!-- 2023.11.14 추가 -->
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/create">모임만들기</a>
         </li>
+        <!--  -->
       </ul>
       <div class="d-flex">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        </li>
-        <li class="nav-item" id="login">
-          <a class="nav-link active" aria-current="page" href="./clubMain.ejs">로그인</a>
-        </li>
-        <li class="nav-item" id="mypage" style="display: none;">
-          <a class="nav-link active" aria-current="page" href="/users/mypage">MyPage</a>
-        </li>
-        <li class="nav-item" id="logout" style="display: none;">
-          <a class="nav-link active" aria-current="page" href="/users/logout">로그아웃</a>
-        </li>
+          <li class="nav-item" id="login">
+            <a class="nav-link active" aria-current="page" href="/login">로그인</a>
+          </li>
+          <li class="nav-item" id="mypage" style="display: none;">
+            <a class="nav-link active" aria-current="page" href="/users/mypage">Mypage</a>
+          </li>
+          <li class="nav-item" id="logout" style="display: none;">
+            <a class="nav-link active" aria-current="page" href="#">로그아웃</a>
+          </li>
         </ul>
       </div>
     </div>
   </div>
 </nav>
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+  const auth = getAuth(app);
+  
+  $('#logout').on('click',()=>{
+    // auth.signOut();
+    signOut(auth).then(() => {
+    console.log("로그아웃 잘됨");
+    }).catch((error) => {
+    console.log("로그아웃 에러남");
+    });
+    localStorage.clear();
+    location.href="/login"
+  })
+  
+    if(localStorage.getItem('email')){
+    $('#login, #logout').toggle();
+    // $('#mypage a').html(localStorage.getItem('email'));
+  }
+</script>

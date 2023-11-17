@@ -16,9 +16,12 @@ router.get('/clubMain/:category/:clubId', function(req, res, next) {
   let clubId = req.params.clubId
   res.render('index', { title: '클럽메인' , pageName: "clubMain.ejs", id:category, id2:clubId});
 });
-// router.get('/login', function(req, res, next) { //app.js -> path 라이브러리 __dirname, views
-//   res.render('index', { title: '로그인', pageName:"auth/login.ejs" });
-// });
+router.get('/login', function(req, res, next) { 
+  res.render('index', { title: '로그인', pageName:"auth/login.ejs" });
+});
+router.get('/join', function(req, res, next) { 
+  res.render('index', { title: '회원가입', pageName:"auth/join.ejs" });
+});
 // router.get('/board/list', function(req, res, next) { //app.js -> path 라이브러리 __dirname, views
 //   res.render('index', { title: '글목록', pageName:"board/list.ejs" });
 // });

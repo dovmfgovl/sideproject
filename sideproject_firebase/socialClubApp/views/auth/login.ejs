@@ -12,55 +12,53 @@
           class="form-control"
           name="password"
           type="password"
-          value="12341234"
+          value="12345678"
         />
       </div>
       <div class="my-3">
-        <!-- 
-          <input type=button> or <button> 기본적으로 submit 속성이 내장됨
-        -->
-        <button class="btn btn-success w-100">로그인</button>
+        <button class="btn btn-secondary w-100" id="btnLogin">로그인</button>
       </div>
-      <!-- 회원가입 링크경로는 반드시 router/user.js를 확인할 것 -->
-      <div class="text-end mt-3"><a href="/users/join">회원가입</a></div>
+      <div class="my-3">
+        <button class="btn btn-dark w-100" id="btnGoogleLogin">구글 로그인</button>
+      </div>
+      <div class="text-end mt-3"><a href="/join">회원가입</a></div>
     </form>
   </div>
 </div>
+
 <script type="module">
   import { app } from "/javascripts/firebase.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-  const auth = getAuth(app); //api key, 너 정보
-  console.log(auth);
+  import{loginEmail, loginGoogle} from"/javascripts/authLogic.js";
+  import AuthLogic from"/javascripts/authLogic.js";
 
-  //로그인 버튼을 눌렀을 때
-  // document.getElementsByName(frm)
-  //submit 이슈 - submit 이벤트를 처리할 때 캡쳐링으로 인한 이벤트 전이가 발생함 - 방어 해야함
-  $(frm).on("submit", function(e){
-    console.log('로그인버튼 클릭');
-    e.preventDefault(); //이벤트 캡쳐링 방어
-    //사용자가 화면에 입력한 이메일 주소 담기
-    let email = $(frm.email).val();
-    //사용자가 화면에 입력한 비번 담기
-    let password = $(frm.password).val();
-    console.log(`${email} ${password}`);
-//https://firebase.google.com/docs/auth/web/start?hl=ko&authuser=0
-//기존 사용자가 자신의 이메일 주소와 비밀번호를 사용해 로그인할 수 있는 양식을 만듭니다.
-//사용자가 양식을 작성하면 signInWithEmailAndPassword 메서드를 호출합니다.
-    signInWithEmailAndPassword(auth, email, password)
-    .then((response) => { //then은 Promise 약속할게 - 응답을 다 받을때까지 기다렸다가 response파이어베이스서버 담아줌
-      // Signed in 
-      const user = response.user;
-      //JSON.stringify(user) -> string 변환됨 - 글자를 알아볼 수 있다 - Object 출력하지 않고
-      console.log(`user ===> ${JSON.stringify(user)}`); //[object, Object] - JSON.parse() : JSON형식을 Array로 바꿔줌
-      console.log(`uid ===> ${user.uid}`);
-      console.log(`email ===> ${user.email}`);
-      localStorage.setItem("uid",`${user.uid}`) // 로컬 브라우저 저장소에 담음
-      localStorage.setItem("email",`${user.email}`) // 로컬 브라우저 저장소에 담음
-      location.href="/";
+  console.log("import");
+  const authLogic = new AuthLogic();
+  const auth = authLogic.auth;
+  const googleProvider = authLogic.googleProvider;
+  
+  console.log(auth);
+  console.log(googleProvider);
+  
+  $("#btnLogin").on("click", ()=>{
+    console.log("로그인버튼 클릭");
+    $(frm).on("submit", (e)=>{
+      console.log(e.currentTarget);
+      e.preventDefault();//이벤트 캡쳐링을 방어, submit에서 항상 잊지말것!
+      let email = $(frm.email).val();
+      let password = $(frm.password).val();
+      console.log(`${email} ${password}`);
+      loginEmail(auth, email, password);
     })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
   })
+
+  $("#btnGoogleLogin").on("click", async(e)=>{
+    console.log("구글로그인 버튼 클릭");
+    e.preventDefault();
+    const result = await loginGoogle(auth, googleProvider)
+    console.log(result.uid);
+    console.log(result.displayName);
+    console.log(result.email);
+    location.href="/";
+  })
+  
 </script>

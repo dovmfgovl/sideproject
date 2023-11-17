@@ -1,0 +1,38 @@
+<div class="row my-5 justify-content-center">
+  <div class="col-8 col-md-6 col-lg-4">
+      <h3 class="text-center mb-5">회원가입</h3>
+      <form name="frm" method="post">
+          <div class="input-group my-2">
+              <div class="input-group-text">이 메 일</div>
+              <input class="form-control" name="email" value="tomato@hot.com">
+          </div>
+          <div class="input-group">
+              <div class="input-group-text">비밀번호</div>
+              <input class="form-control" name="password" type="password" value="12345678">
+          </div>
+          <div class="my-3"><button class="btn btn-secondary w-100">회원가입</button></div>
+          <div class="text-end mt-3"><a href="/login">로그인</a></div>
+      </form>
+  </div>
+</div>
+
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+  const auth = getAuth(app);
+  console.log(auth);
+
+  $(frm).on("submit", (e)=>{
+    console.log("회원가입버튼 클릭");
+    e.preventDefault();//이벤트 캡쳐링을 방어, submit에서 항상 잊지말것!
+    let email = $(frm.email).val();
+    let password = $(frm.password).val();
+    console.log(`${email} ${password}`);
+
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((response) => {
+      console.log(response);
+      location.href = "/login"
+    }).catch((error) => alert(error.message) );
+  })//end of create user
+</script>

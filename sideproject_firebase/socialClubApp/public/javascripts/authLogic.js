@@ -1,49 +1,56 @@
-import axios from "axios";
-import {getAuth
-      , GithubAuthProvider
-      , GoogleAuthProvider} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-class AuthLogic {
+import {
+  signInWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+class AuthLogic{
   constructor(){
     this.auth = getAuth();
-    this.gitProvider = new GithubAuthProvider();
     this.googleProvider = new GoogleAuthProvider();
   }
-  getUserAuth = () => {
+  getUserAuth = ()=>{
     return this.auth;
   }
-  getGoogleAuthProvider = () => {
+  getGoogleAuthProvider = ()=>{
     return this.googleProvider;
   }
-}//end of AuthLogic
+}
 export default AuthLogic;
-// const params = {
-//   uid: '12232222',
-//   email: 'kaaa@hot.com'
-// }
 
-export const loginGoogle = (params) => {
+export const loginGoogle = (auth, googleProvider) => {
+  console.log('loginGoogle호출 성공');
+  console.log(googleProvider);
   return new Promise((resolve, reject) => {
-    signInWithEmailAndPassword(auth, googleProvider)
-      .then((result) => {})
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+    signInWithPopup(auth, googleProvider)
+    .then((result) => {
+      console.log(result);//object Object - 안보임 - uid, displayName-realname, email
+      console.log(JSON.stringify(result));
+      const user = result.user;
+      localStorage.setItem("uid",user.uid)
+      localStorage.setItem("displayName",user.displayName)
+      localStorage.setItem("email",user.email)
+      resolve(user)
+    }).catch((error) => reject(error));
   });
-}; //end of loginGoogle
+};
 
-export const loginKakao = (params) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const response = axios({
-        method: "get",
-        url: "카카오토큰을 받아올 URL주소 - 카카오개발자 센터 긁어옴",
-        params: params
-      });
-      console.log(response);
-      resolve(response)
-    } catch (error) {
-      reject(error);
-    }
+export const loginEmail = (auth, email, password) =>{
+  signInWithEmailAndPassword(auth, email, password)
+  .then((response) => {
+  const user = response.user;
+  //JSON.stringify(user)->string 변환됨 - 글자를 알아볼 수 있다. 
+  console.log(`user ===> ${JSON.stringify(user)}`);//[object,Object] - JSON.parse(): Json->array로 변경
+  console.log(`uid===>${user.uid}`);
+  console.log(`email===>${user.email}`);
+  localStorage.setItem("uid",`${user.uid}`);//로컬브라우저 저장소에 담아줌
+  localStorage.setItem("email",`${user.email}`);
+  location.href="/";
+
+  })
+  .catch((error) => {
+  const errorCode = error.code;
+  const errorMessage = error.message;
   });
-};//end of loginKakao
+}
