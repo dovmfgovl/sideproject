@@ -1,0 +1,57 @@
+<%-include("../clubNav.ejs")%>
+
+<div class="row my-5">
+  <div class="col">
+      <h1 class="text-center mb-5">글쓰기</h1>
+      <form name="frm" method="post">
+          <input class="form-control my-2" name="title" placeholder="제목을 입력하세요.">
+          <textarea class="form-control" name="body" rows="10" placeholder="내용을 입력하세요."></textarea>
+          <div class="text-center my-2">
+              <button class="btn btn-primary">글등록</button>
+              <button class="btn btn-secondary" type="reset">등록취소</button>
+          </div>
+      </form>
+  </div>
+</div>
+<!-- 외부에서 제공되는 라이브러리 사용 -->
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, setDoc, doc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  const db = getFirestore(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+
+  $(frm).on("submit", async(event) => {
+    event.preventDefault(); //새로고침 사이드이펙트 발동 막음
+    let title = $(frm.title).val(); //사용자가 입력한 제목 받아오기
+    let body = $(frm.body).val(); //사용자가 입력한 제목 받아오기
+    //유효성 검사 추가
+    if(title =="" || body ==""){
+      $("#modal-alert .modal-body").html("제목 또는 내용을 입력하세요!");
+      $("#modal-alert").modal("show");
+    }
+    //제목과 내용을 모두 작성했다면 else로
+    else {
+      //로그인 성공 후 로컬스토리지에 저장된 정보를 작성자로 한다
+      let email = localStorage.getItem('email');
+      let date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      console.log(`${title}, ${body}, ${email}, ${date}`);
+      await setDoc(doc(collection(db, `club-category-${category}`, clubId, 'board')), { 
+      email, title, body, date 
+    });
+    //처리(firebase서버에 저장되면 어디로 가야하지?)가 되면 어디로..
+    location.href="/clubMain/<%=id%>/<%=id2%>/board";
+    }
+  })
+
+    //{ email:email, title:title, body:body, date:date } ES6 부터 : 키와 값 같으면 생략가능
+    //collection 값을 폴더명으로 생각함
+    //app은 어디서 받아온거죠? - firebase.js에서 export const app = XXXXX(설정내용을 참조하는 주소번지);
+    //const db = getFirestore(app);
+  //   await addDoc(collection(db, 'board'), {  //posts자리에 board가 생성됨
+  //     email, title, body, date 
+  //   });
+  //   //처리(firebase서버에 저장되면 어디로 가야하지?)가 되면 어디로..
+  // }
+</script>

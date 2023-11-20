@@ -1,0 +1,113 @@
+<%-include("../clubNav.ejs")%>
+
+<div class="row my-2">
+  <div class="col">
+    <h3 class="text-center mt-4 mb-2">게시글</h3>
+    <div class="text-end">
+      <button class="btn btn-primary btn-sm" id="btn-write">글쓰기</button>
+    </div>
+    <div id="boards"></div>
+    <div class="text-center my-3" id="btn-group" style="display: none">
+      <button class="btn btn-primary btn-sm" id="btn-prev">이전</button>
+      <span class="px-2" id="span-page">1</span>
+      <button class="btn btn-primary btn-sm" id="btn-next">다음</button>
+    </div>
+  </div>
+</div>
+
+<script id="temp" type="text/x-handlebars-template">
+  {{#each .}}
+  <div class="card my-2" style="font-size:0.8rem">
+    <div class="card-body">
+        <a href="/board/{{ id }}"><h5>{{ title }}</h5></a>
+        <div class="ellipsis2">{{ body }}</div>
+    </div>
+    <div class="card-footer">
+      <span>Posted on {{ date }} by {{ email }}</span>
+      </span>
+  </div>
+  </div>
+  {{/each}}
+</script>
+  
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, setDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  import { query, where, getDocs, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+  const db = getFirestore(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+  console.log(category);
+  console.log(clubId);
+  let page = 1;
+
+  //호이스팅 이슈는 변수에만 적용되는 게 아님
+  //함수도 호이스팅이 일어난다(전역화되어 제일 앞에 위치하는 것 - function은 발생하지만 arrow는 발생 안 됨)
+  getList();
+
+  $("#btn-next").on("click", function(){
+    page++;
+    getList();
+  })
+  $("#btn-prev").on("click", function(){
+    page--;
+    getList();
+  })
+
+  async function getList(){ //arrow function은 호이스팅 일어나지 않음
+    const q = query(collection(db, `club-category-${category}`, clubId, 'board'), orderBy('date', 'desc'));
+    const snapshot = await getDocs(q);
+    let rows = [];
+    console.log(snapshot.docs);
+    console.log(snapshot.docs.length); //총레코드 수
+    snapshot.docs.forEach(async (row, index) => {
+      console.log(index);
+      //한 페이지에 몇 개씩 보여줄까?
+      let size = 3;
+      //마지막 페이지의 숫자를 구하는 공식은? - 총 레코드 숫자
+      let last = Math.ceil(snapshot.docs.length/size);
+      //시작 페이지의 숫자 구하기
+      let start = (page-1)*size;
+      let end = (page*size)-1;
+
+      if(index >= start && index <= end){
+        console.log(row.id);
+        //여러 개의 쿼리문을 병합하는 코드 - spread연산자(원본 가져옴) -> 열거형 연산자(,) 활용 : 새로운 배열객체 생성
+        //  1차 머지: 해당 글의 아이디 값을 가져와 배열에 추가하기(존재하지 않는 컬럼(id:row.id)으로 시작)
+        rows.push({id:row.id,...row.data()});
+        console.log(rows); //원본에 id키를 갖는 값이 들어갔나?
+        let temp = Handlebars.compile($('#temp').html());
+        $('#boards').html(temp(rows));
+
+/* 페이징 처리 UI 추가 */
+        if(snapshot.docs.length > 0){ //조회된 결과가 있어?
+          $("#btn-group").show();
+        }
+        $("#span-page").html(page+"/"+last)
+        //네가 첫 페이지니? 응 - 이전버튼은 비활성화
+        if(page == 1) $("#btn-prev").attr("disabled", true);
+        else $("#btn-prev").attr("disabled", false);
+        //네가 마지막 페이지니?
+        if(page == last) $("#btn-next").attr("disabled", true);
+        else $("#btn-next").attr("disabled", false);
+/* 페이징 처리 UI 추가 */
+
+      }//end of if      
+    });//end of forEach
+  }//end of getList
+
+  //개발자 센터 > application > storage > Local storage
+  const email = localStorage.getItem("email");
+  $("#btn-write").on("click", () => {
+    //로그인을 해야만 글쓰기 권한이 있다
+    //너 로그인 했니? 너 email값 쥐고 있어? - 어디에? localStorage
+    if(email){
+      location.href = "/clubMain/<%= id %>/<%= id2 %>/board/write";
+    }
+    //나 로그인 안했어. 하고 와 
+    else {
+      location.href = "/login";
+    }
+  })
+</script>

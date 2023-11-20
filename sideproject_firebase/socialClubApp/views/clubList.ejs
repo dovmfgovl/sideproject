@@ -49,8 +49,8 @@
     let searchArea = 5 //초기 설정된 검색반경 5km
     console.log("검색범위는"+searchArea);
 
-    const myLat = 37.39961291798142;
-    const myLng = 126.66890968957239;
+    const myLat = 37.47647560129903;
+    const myLng = 126.87989693200248;
     
     async function getClubList(area){
       const querySnapshot = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
@@ -66,7 +66,7 @@
           <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
           <div class="flex-grow-1 p-4">
               <h5 class="club-name">${doc.data().club_name}</h5>
-              <p class="club-info">${doc.data().club_info}</p>
+              <p class="club-aim">${doc.data().club_aim}</p>
               <p class="float-end">❤️0</p>
           </div>
         </div>
@@ -92,12 +92,7 @@
       console.log(pressedBtn);
       location.href = `/clubList/${pressedBtn}`;
     })
-
-    $(".club-container").on("click", (e)=>{
-      const clubId = e.currentTarget.id;
-      location.href = `/clubMain/${id}/${clubId}`;
-    })
-
+    
     $("#btn-search-area").on("click", (e)=>{
       e.preventDefault();
       $('.club-list').html("");
@@ -105,11 +100,11 @@
       console.log(area+"km선택됨");
       getClubList(area);
     })
-
+    
     //위도 경도로 거리 구하는 함수
     function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
       function deg2rad(deg) {
-          return deg * (Math.PI/180)
+        return deg * (Math.PI/180)
       }
       var R = 6371; // Radius of the earth in km
       var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -120,4 +115,20 @@
       return d; 
     }
     
+    //클럽메인으로 이동
+    // $(".club-container").on("click", (e) => {
+    //   const clubId = e.currentTarget.id;
+    //   location.href = `/clubMain/${id}/${clubId}`;
+    // })
+
+    // $(".club-list").on("click", ".club-container", (e) => {
+    //   const clubId = e.currentTarget.id;
+    //   location.href = `/clubMain/${id}/${clubId}`;
+    // });
+    
+    $(document).on("click", ".club-container", (e)=>{//카테고리 클릭 시 페이지 이동
+      console.log("버튼 눌림");
+      const clubId = e.currentTarget.id;
+      location.href = `/clubMain/${id}/${clubId}`;
+    })
   </script>

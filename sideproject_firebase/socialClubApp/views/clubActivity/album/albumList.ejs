@@ -1,0 +1,101 @@
+<div class="clubMain-property">
+  <ul class="nav nav-tabs mt-3">
+    <li class="nav-item">
+      <a class="nav-link" aria-current="page" href="/clubMain/<%=id%>/<%=id2%>/board">Board</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/clubMain/<%=id%>/<%=id2%>/album">Album</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/clubMain/<%=id%>/<%=id2%>/comment">Comment</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/clubMain/<%=id%>/<%=id2%>/schedule">Schedule</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/clubMain/<%=id%>/<%=id2%>/info">Info</a>
+    </li>
+  </ul>
+</div>
+
+<div class="row my-2">
+  <div class="col">
+    <h3 class="text-center mt-4 mb-2">Album</h3>
+    <div class="text-end">
+      <button class="btn btn-primary btn-sm" id="btn-upload">upload</button>
+    </div>
+    <!-- albumList를 출력할 공간 -->
+    <div id="list_album"></div>
+  </div>
+</div>
+
+<!-- list_album 안에 들어갈 템플릿 작성하기 -->
+<script id="temp_pic" type="text/x-handlebars-template">
+  {{#each documents}}
+  <div class="col-6 col-md-4 col-lg-2">
+    <div class="card my-2">
+      <div class="card-body">
+        <img src="{{photo}}" alt="앨범사진" style="cursor: pointer; width: 80%; margin-left: 12px;">
+      </div>
+      <div class="card-footer" style="font-size: 0.7rem;">
+        <div class="text-center">
+          <span>{{ title }} / {{ date }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</script>
+  
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, setDoc, doc, getDocs, collection } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  const db = getFirestore(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+  console.log(category);
+  console.log(clubId);
+
+  let page = 1;
+
+  getList();
+
+  async function getList(){ 
+    let photoURLs = []; // 사진 URL을 저장할 배열
+    const querySnapshot = await getDocs(collection(db, `club-category-${category}`, clubId, 'album'));
+    querySnapshot.forEach((doc) => {
+    console.log(doc.data().photo); //저장되어 있는 사진 URL
+    photoURLs.push(doc.data().photo); // URL을 배열에 추가
+  });
+
+  //핸들바스 템플릿을 가져온다.
+  const temp = Handlebars.compile($('#temp_pic').html());
+  //위에서 읽어온 템플릿(반복문 적용된) 결과를 div 태그 내부에 끼워넣기
+  $('#list_album').html(temp({ documents: photoURLs })); // Handlebars에 전달하는 객체에 사진 URL 배열 추가
+
+      // const template =`
+      //   <div class="club-container" id="${doc.id}">
+      //     <div class="photo" style="background-image: url('${doc.data().photo}'></div>
+      //     <div class="flex-grow-1 p-4">
+      //         <h5 class="album-title">${doc.data().title}</h5>
+      //         <p class="album-date">${doc.data().date}</p>
+      //     </div>
+      //   </div>
+      //   `
+
+  }//end of getList
+
+  //개발자 센터 > application > storage > Local storage
+  const email = localStorage.getItem("email");
+  $("#btn-upload").on("click", () => {
+    //로그인을 해야만 글쓰기 권한이 있다
+    //너 로그인 했니? 너 email값 쥐고 있어? - 어디에? localStorage
+    if(email){
+      location.href = "/clubMain/<%=id%>/<%=id2%>/album/upload";
+    }
+    //나 로그인 안했어. 하고 와 
+    else {
+      location.href = "/login";
+    }
+  })
+</script>

@@ -1,0 +1,69 @@
+<div class="clubMain-property">
+  <ul class="nav nav-tabs mt-3">
+    <li class="nav-item">
+      <a class="nav-link" aria-current="page" href="/clubMain/<%=id%>/<%=id2%>/board">Board</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/clubMain/<%=id%>/<%=id2%>/album">Album</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/clubMain/<%=id%>/<%=id2%>/comment">Comment</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/clubMain/<%=id%>/<%=id2%>/schedule">Schedule</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/clubMain/<%=id%>/<%=id2%>/info">Info</a>
+    </li>
+  </ul>
+</div>
+
+<div class="row my-5">
+  <div class="col">
+      <h3 class="text-center mb-5">사진 업로드</h3>
+      <form name="frm" method="post">
+          <input class="form-control my-2" name="title" placeholder="title">
+          <input class="form-control mt-2" type="file" name="file">
+          <div class="text-center my-2">
+              <button class="btn btn-primary">올리기</button>
+          </div>
+      </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+
+  const db = getFirestore(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+
+  const storage = getStorage(app); //Storage 라이브러리 사용을 위한 객체 생성
+  const uid = localStorage.getItem("uid");
+
+  $(frm).on("submit", async function(event) {
+    event.preventDefault();
+    let title = $(frm.title).val();
+    let file = frm.file.files[0];
+    //유효성 검사 추가
+    if(title =="" || file ==""){
+          $("#modal-alert .modal-body").html("제목 또는 사진을 첨부하세요!");
+          $("#modal-alert").modal("show");
+    } else {
+      //로그인 성공 후 로컬스토리지에 저장된 정보를 작성자로 한다
+      let email = localStorage.getItem('email');
+      let date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      console.log(`${title}, ${email}, ${date}`);
+      //스토리지에 photo 폴더 만들어 사진 업로드
+      const snapshot = await uploadBytes(ref(storage, `/photo/${Date.now()}.jpg`), frm.file.files[0]); 
+      const url = await getDownloadURL(snapshot.ref);
+      await setDoc(doc(collection(db, `club-category-${category}`, clubId, 'album')), {
+        title, email, date, photo: url
+      });
+      location.href="/clubMain/<%=id%>/<%=id2%>/album";
+    }
+  })
+</script>

@@ -1,0 +1,44 @@
+<%-include("../clubNav.ejs")%>
+
+<div class="row my-5">
+  <div class="col">
+      <h1 class="text-center mb-5">글정보</h1>
+      <div class="text-end mb-2" id="btn-group" style="display:none">
+          <button class="btn btn-primary btn-sm" id="btn-update">수정</button>
+          <button class="btn btn-danger btn-sm" id="btn-delete">삭제</button>
+      </div>
+      <div id="board"></div>
+  </div>
+</div>
+
+<!--게시글정보 템플릿-->
+<script id="temp" type="text/x-handlebars-template">
+  <div class="card">
+      <div class="card-body">
+          <h5>{{ title }}</h5>
+          <div>{{ body }}</div>
+      </div>
+      <div class="card-footer">
+          Posted on <span>{{ date }}</span> by <span>{{ email }}</span>
+      </div>
+  </div>
+</script>
+
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, doc, deleteDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  const db = getFirestore(app);
+  const email = localStorage.getItem("email"); //브라우저 localStorage에 담긴 값 가져옴
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+  const readId = "<%=id3%>"; //각각의 글에 대한 id를 가져오기 위해 readID로 id 하나 더 설정
+  console.log(category);
+  console.log(clubId);
+  console.log(readId);
+  const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'board'), readId));
+  const row = snapshot.data();
+  console.log(row);
+
+  let temp = Handlebars.compile($('#temp').html());
+  $("#board").html(temp(row));
+</script>

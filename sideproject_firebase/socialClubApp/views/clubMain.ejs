@@ -2,54 +2,50 @@
   <!-- 현재 동호회명 & 클럽 정보 출력 -->
 </div>
 
-<div class="clubMain-property">
-  <!-- <ul class="nav nav-underline">
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="#">Board</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Album</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Comment</a>
-    </li>
-  </ul> -->
-  <ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="#">Board</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Album</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Comment</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Schedule</a>
-    </li>
-  </ul>
-</div>
+<%-include("./clubActivity/clubNav.ejs")%>
 
 <script type="module">
   import { app } from "/javascripts/firebase.js";
-  import {getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  import {getFirestore, collection, getDoc, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
   const db = getFirestore(app);
   const category = "<%=id%>";
   const clubId = "<%=id2%>";
   console.log(category);
   console.log(clubId);
-  const querySnapshot = await getDocs(collection(db, `club-category-${category}`));
-  querySnapshot.forEach((doc) => {
+  //const querySnapshot = await getDocs(collection(doc(db, `club-category-${category}, clubId`)));
+  const docRef = doc(collection(db, `club-category-${category}`), clubId);
+  const docSnapshot = await getDoc(docRef);
 
-    const template = `
-    <div class="ocurrent-clubInf">
+  // 문서 존재 여부 확인 및 사용하기
+  if (docSnapshot.exists()) {
+  // 문서가 존재할 때 처리하는 내용
+  console.log(docSnapshot.id, ' => ', docSnapshot.data());
+  // 가져온 문서 사용하기
+  const doc = docSnapshot.data();
+
+  const template = `
+    <div class="current-clubInfo">
       <div class="flex-grow-1 p-4">
-            <h5 class="club-name">${doc.data().club_name}</h5>
-            <p class="club-info">${doc.data().club_info}</p>
-        </div>
+        <h5 class="club-name">${doc.club_name}</h5>
+        <p class="club-aim">${doc.club_aim}</p>
+      </div>
     </div>`;
-    console.log(doc.id, " => ", doc.data());
-    $('.current-clubInfo').append(template);
-  })
+  $('.current-clubInfo').append(template);
+} else {
+  // 문서가 존재하지 않을 때 처리하는 내용
+  console.log('해당 문서가 존재하지 않습니다.');
+}
 
+  // docSnapshot.forEach((doc) => {
+  //   const template = `
+  //   <div class="current-clubInfo">
+  //     <div class="flex-grow-1 p-4">
+  //           <h5 class="club-name">${doc.data().club_name}</h5>
+  //           <p class="club-aim">${doc.data().club_aim}</p>
+  //       </div>
+  //   </div>`;
+  //   console.log(doc.id, " => ", doc.data());
+  //   $('.current-clubInfo').append(template);
+  // })
 </script>
+
