@@ -35,10 +35,12 @@
   console.log(category);
   console.log(clubId);
   console.log(readId);
-  const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'board'), readId));
-  const row = snapshot.data();
-  console.log(row);
-
-  let temp = Handlebars.compile($('#temp').html());
-  $("#board").html(temp(row));
+  try {
+    const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'board'), readId));
+    const row = snapshot.data();    
+    let temp = Handlebars.compile($('#temp').html());
+    $("#board").html(temp(row));
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 </script>

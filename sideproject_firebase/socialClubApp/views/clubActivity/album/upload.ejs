@@ -55,7 +55,7 @@
     } else {
       //로그인 성공 후 로컬스토리지에 저장된 정보를 작성자로 한다
       let email = localStorage.getItem('email');
-      let date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      let date = moment(new Date()).format('YYYY-MM-DD');
       console.log(`${title}, ${email}, ${date}`);
       //스토리지에 photo 폴더 만들어 사진 업로드
       const snapshot = await uploadBytes(ref(storage, `/photo/${Date.now()}.jpg`), frm.file.files[0]); 

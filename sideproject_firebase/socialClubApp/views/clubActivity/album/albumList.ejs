@@ -25,7 +25,7 @@
       <button class="btn btn-primary btn-sm" id="btn-upload">upload</button>
     </div>
     <!-- albumList를 출력할 공간 -->
-    <div id="list_album"></div>
+    <div class="row" id="list_album"></div>
   </div>
 </div>
 
@@ -33,13 +33,13 @@
 <script id="temp_pic" type="text/x-handlebars-template">
   {{#each documents}}
   <div class="col-6 col-md-4 col-lg-2">
-    <div class="card my-2">
+    <div class="card my-1">
       <div class="card-body">
-        <img src="{{photo}}" alt="앨범사진" style="cursor: pointer; width: 80%; margin-left: 12px;">
+        <img src="{{this}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;">
       </div>
       <div class="card-footer" style="font-size: 0.7rem;">
         <div class="text-center">
-          <span>{{ title }} / {{ date }}</span>
+          <span>{{lookup ../titles @index}} / {{lookup ../dates @index}}</span>
         </div>
       </div>
     </div>
@@ -62,16 +62,22 @@
 
   async function getList(){ 
     let photoURLs = []; // 사진 URL을 저장할 배열
+    let titles = []; // title을 저장할 배열
+    let dates = []; // date를 저장할 배열
     const querySnapshot = await getDocs(collection(db, `club-category-${category}`, clubId, 'album'));
     querySnapshot.forEach((doc) => {
     console.log(doc.data().photo); //저장되어 있는 사진 URL
+    console.log(doc.data().title);
+    console.log(doc.data().date);
     photoURLs.push(doc.data().photo); // URL을 배열에 추가
+    titles.push(doc.data().title);
+    dates.push(doc.data().date);
   });
 
   //핸들바스 템플릿을 가져온다.
   const temp = Handlebars.compile($('#temp_pic').html());
   //위에서 읽어온 템플릿(반복문 적용된) 결과를 div 태그 내부에 끼워넣기
-  $('#list_album').html(temp({ documents: photoURLs })); // Handlebars에 전달하는 객체에 사진 URL 배열 추가
+  $('#list_album').html(temp({ documents: photoURLs, titles, dates })); // Handlebars에 전달하는 객체에 사진 URL, title, date 배열 추가
 
       // const template =`
       //   <div class="club-container" id="${doc.id}">
