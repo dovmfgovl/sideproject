@@ -35,11 +35,35 @@
   <div class="col-6 col-md-4 col-lg-2">
     <div class="card my-1">
       <div class="card-body">
-        <img src="{{this}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;">
+        <img src="{{this}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;" data-bs-toggle="modal" data-bs-target="#picturemodal">
       </div>
       <div class="card-footer" style="font-size: 0.7rem;">
         <div class="text-center">
           <span>{{lookup ../titles @index}} / {{lookup ../dates @index}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</script>
+
+<script id="temp_pic_modal" type="text/x-handlebars-template">
+  {{#each documents}}
+  <div class="modal fade" id="picturemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="picturemodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="picturemodalLabel">{{title}} by {{email}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img id="modalImage" src="" alt="큰 이미지" style="width: 100%;">
+        </div>
+        <div class="modal-footer">
+          <div class="text-end mb-2" id="btn-group" style="display:none">
+            <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
+          </div>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
         </div>
       </div>
     </div>
@@ -53,8 +77,10 @@
   const db = getFirestore(app);
   const category = "<%=id%>";
   const clubId = "<%=id2%>";
+  const readId = "<%=id3%>";
   console.log(category);
   console.log(clubId);
+  console.log(readId);
 
   let page = 1;
 
@@ -78,16 +104,8 @@
   const temp = Handlebars.compile($('#temp_pic').html());
   //위에서 읽어온 템플릿(반복문 적용된) 결과를 div 태그 내부에 끼워넣기
   $('#list_album').html(temp({ documents: photoURLs, titles, dates })); // Handlebars에 전달하는 객체에 사진 URL, title, date 배열 추가
-
-      // const template =`
-      //   <div class="club-container" id="${doc.id}">
-      //     <div class="photo" style="background-image: url('${doc.data().photo}'></div>
-      //     <div class="flex-grow-1 p-4">
-      //         <h5 class="album-title">${doc.data().title}</h5>
-      //         <p class="album-date">${doc.data().date}</p>
-      //     </div>
-      //   </div>
-      //   `
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const temp2 = Handlebars.compile($('#temp_pic_modal').html())
 
   }//end of getList
 
@@ -104,4 +122,20 @@
       location.href = "/login";
     }
   })
+
+  // 이미지를 클릭했을 때 모달에 해당 이미지를 띄우기
+  $(document).on('click', 'img[data-bs-toggle="modal"]', function() {
+    const imageUrl = $(this).attr('src');
+    $('#modalImage').attr('src', imageUrl);
+  });
+
+  // if( email == )
+  // // 사진 삭제
+  // $("#btn-delete").on('click', async function(){ 
+  //   if(confirm(readId+"번 사진 삭제할거니?")){
+  //     await deleteDoc(doc(collection((db, `club-category-${category}`, clubId, 'album'), readId)));
+  //     //삭제 후 목록페이지로 돌아감
+  //     location.href = "/clubMain/<%=id%>/<%=id2%>/album";
+  //   }
+  // })
 </script>

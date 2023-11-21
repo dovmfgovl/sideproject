@@ -42,7 +42,8 @@ router.get('/clubMain/:category/:clubId/update/:readId', function(req, res, next
 router.get('/clubMain/:category/:clubId/album', function(req, res, next) { 
   let category = req.params.category
   let clubId = req.params.clubId
-  res.render('index', { title: '앨범목록', pageName:"clubActivity/album/albumList.ejs", id:category, id2:clubId });
+  let readId = req.params.readId
+  res.render('index', { title: '앨범목록', pageName:"clubActivity/album/albumList.ejs", id:category, id2:clubId, id3:readId });
 });
 router.get('/clubMain/:category/:clubId/album/upload', function(req, res, next) { 
   let category = req.params.category
