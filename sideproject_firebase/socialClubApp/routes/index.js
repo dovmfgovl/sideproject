@@ -38,6 +38,7 @@ router.get('/clubMain/:category/:clubId/:readId', function(req, res, next) {
   let readId = req.params.readId
   res.render('index', { title: '글 상세보기', pageName:"clubActivity/board/read.ejs", id:category, id2:clubId, id3:readId });
 });
+///clubMain/:category/:clubId/:readId
 // router.get('/board/update/:id', function(req, res, next) { //app.js -> path 라이브러리 __dirname, views
 //   let id = req.params.id;
 //   res.render('index', { title: '글수정', pageName:"board/update.ejs", id: id });
