@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="/stylesheets/comment.css">
+<div>모임댓글</div>
+
+<div class="wrap">
+  <!-- 코멘트 들어 갈 곳 -->
+</div>
+
+<div class="row my-5">
+  <div class="col">
+      <form name="frm" method="post">
+          <textarea class="form-control" name="body" rows="2" placeholder="내용을 입력하세요."></textarea>
+          <div class="text-center my-2">
+              <button class="btn btn-primary">코멘트 입력</button>
+          </div>
+      </form>
+  </div>
+</div>
+<%-include("clubNav.ejs")%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, getDocs, doc, deleteDoc, query, where, addDoc, orderBy} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  const db = getFirestore(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+  const email = localStorage.getItem("email");
+
+  getComment();
+
+  async function getComment(){
+
+    const q = query(collection(db, `club-category-${category}/${clubId}/comment`),orderBy("date"));
+    const snapshot = await getDocs(q);
+      snapshot.docs.forEach((doc,index)=>{
+        const getEmail = doc.data().email
+        console.log(doc.data());
+        console.log(index);
+        if(email == getEmail){//사용자가 쓴 글일때는 노란색으로/오른쪽으로
+          const template =`
+          <div class="chat ch2">
+            <div class="icon"><i class="fa-solid fa-user"></i></div>
+            <div class="user-id">${doc.data().email}</div>
+            <div class="textbox">${doc.data().comment}</div>
+          </div>
+          `
+          $(".wrap").append(template)
+        }else{//남의 글은 왼쪽/흰색으로 표시
+          const template =`
+          <div class="chat ch1">
+            <div class="icon"><i class="fa-solid fa-user"></i></div>
+            <div class="user-id">${doc.data().id}</div>
+            <div class="textbox">${doc.data().comment}</div>
+          </div>
+          `
+          $(".wrap").append(template)
+        }
+      })
+  }
+    $(frm).on("submit", async(e)=>{
+      console.log("submit 눌림");
+      event.preventDefault();
+      let body = $(frm.body).val();
+      if(body==""){
+        alert("내용을 채워주세요")
+      }else{
+        let date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+        const data = {
+          email:email,
+          comment:body, 
+          date:date};
+        await addDoc(collection(db,`club-category-${category}/${clubId}/comment`),data);
+          location.href=`/clubMain/${category}/${clubId}/comment`;
+      }
+    })
+
+</script>

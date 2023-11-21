@@ -19,7 +19,7 @@
   {{#each .}}
   <div class="card my-2" style="font-size:0.8rem">
     <div class="card-body">
-        <a href="/board/{{ id }}"><h5>{{ title }}</h5></a>
+        <a href="/clubMain/{{category}}/{{clubId}}/{{readId}}"><h5>{{ title }}</h5></a>
         <div class="ellipsis2">{{ body }}</div>
     </div>
     <div class="card-footer">
@@ -42,8 +42,6 @@
   console.log(clubId);
   let page = 1;
 
-  //호이스팅 이슈는 변수에만 적용되는 게 아님
-  //함수도 호이스팅이 일어난다(전역화되어 제일 앞에 위치하는 것 - function은 발생하지만 arrow는 발생 안 됨)
   getList();
 
   $("#btn-next").on("click", function(){
@@ -55,12 +53,10 @@
     getList();
   })
 
-  async function getList(){ //arrow function은 호이스팅 일어나지 않음
+  async function getList(){
     const q = query(collection(db, `club-category-${category}`, clubId, 'board'), orderBy('date', 'desc'));
     const snapshot = await getDocs(q);
     let rows = [];
-    console.log(snapshot.docs);
-    console.log(snapshot.docs.length); //총레코드 수
     snapshot.docs.forEach(async (row, index) => {
       console.log(index);
       //한 페이지에 몇 개씩 보여줄까?
@@ -103,10 +99,10 @@
     //로그인을 해야만 글쓰기 권한이 있다
     //너 로그인 했니? 너 email값 쥐고 있어? - 어디에? localStorage
     if(email){
-      location.href = "/clubMain/<%= id %>/<%= id2 %>/board/write";
+      location.href = "/clubMain/<%=id%>/<%=id2%>/write";
     }
     //나 로그인 안했어. 하고 와 
-    else {
+    else { 
       location.href = "/login";
     }
   })

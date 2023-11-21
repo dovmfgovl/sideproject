@@ -41,17 +41,7 @@
       email, title, body, date 
     });
     //처리(firebase서버에 저장되면 어디로 가야하지?)가 되면 어디로..
-    location.href="/clubMain/<%=id%>/<%=id2%>/board";
+    location.href="/clubMain/<%=id%>/<%=id2%>";
     }
   })
-
-    //{ email:email, title:title, body:body, date:date } ES6 부터 : 키와 값 같으면 생략가능
-    //collection 값을 폴더명으로 생각함
-    //app은 어디서 받아온거죠? - firebase.js에서 export const app = XXXXX(설정내용을 참조하는 주소번지);
-    //const db = getFirestore(app);
-  //   await addDoc(collection(db, 'board'), {  //posts자리에 board가 생성됨
-  //     email, title, body, date 
-  //   });
-  //   //처리(firebase서버에 저장되면 어디로 가야하지?)가 되면 어디로..
-  // }
 </script>

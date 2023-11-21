@@ -4,16 +4,16 @@
   <!-- 현재 카테고리 -->
 </div>
 
-<div class="container">
+<div class="container" id="search-area-group" style="display:none">
   <div class='search-area'>탐색범위</div>
   <select id="sel-search-area">
     <option value="5">5km</option>
     <option value="10">10km</option>
     <option value="30">30km</option>
+    <option value="0">All</option>
   </select>
   <button id="btn-search-area">검색</button>
 </div>
-
 
 <div class="club-categories">
     <div class="club-category bg-secondary" id="study">study</div>
@@ -30,81 +30,120 @@
   <!-- 클럽리스트 목록 들어갈곳-->
 </div>
 
-<!-- 페이지 -->
-<div class="text-center mt-2">
-  <button class="btn btn-secondary btn-sm px-5" id="prev">이전</button>
-  <span id="page" class="px-3">1/10</span>
-  <button class="btn btn-secondary btn-sm px-5" id="next">다음</button>
+<!-- 페이지처리 -->
+<div class="text-center my-3" id="btn-group" style="display:none">
+  <button class="btn btn-primary btn-sm" id="btn-prev">이전</button>
+  <span class="px-2" id="span-page">1</span>
+  <button class="btn btn-primary btn-sm" id="btn-next">다음</button>
 </div>
-
 
   <script type="module">
     import { app } from "/javascripts/firebase.js";
     import { getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
     const db = getFirestore(app);
-    const id = "<%=id%>"
-    console.log(id);
+    const id = "<%=id%>"//라우터에서 설정해놓은 id가져오기
+    let page = 1;
+    
+    let searchArea = 5 //초기 설정된 검색반경 5km
+    console.log("초기 검색범위는"+ searchArea);
+    
+    let myLat;//내 활동반경을 상수값으로 설정
+    let myLng;//login구현 후에 수정해야함
+    
+    ////////////////////페이지 처리///////////////////////
+    
+    //////////////////////////////////////////////////////
     $(".current-category").html(`${id}`);//현재 카테고리 화면에 출력
 
-    let searchArea = 5 //초기 설정된 검색반경 5km
-    console.log("검색범위는"+searchArea);
+    if(localStorage.getItem("email")){//로그인 시에는 주변목록만 불러옴
+      $("#search-area-group").show();
+      const myEmail = localStorage.getItem("email");
+      const q = query(collection(db, "users"), where("user_email","==",myEmail));
+      const snapshot = await getDocs(q);
+      myLat = snapshot.docs[0].data().lat;
+      myLng = snapshot.docs[0].data().lng;
+      getClubList(searchArea);
+    }else getClubListAll();//로그인 되어있지 않을때는 모든 목록 불러옴
 
-    const myLat = 37.47647560129903;
-    const myLng = 126.87989693200248;
-    
-    async function getClubList(area){
-      const querySnapshot = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
-      querySnapshot.forEach((doc) => {
-        console.log(doc.data().club_thumbnail);
-        let thumbnail = 'https://via.placeholder.com/150';//엑박이미지
-  
-        if(doc.data().club_thumbnail){//이미지가 있으면 썸네일 사용 없으면 엑박이미지 사용
-          thumbnail = doc.data().club_thumbnail;
-        }
-        const template =`
-        <div class="club-container" id="${doc.id}">
-          <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
-          <div class="flex-grow-1 p-4">
-              <h5 class="club-name">${doc.data().club_name}</h5>
-              <p class="club-aim">${doc.data().club_aim}</p>
-              <p class="float-end">❤️0</p>
+    async function getClubListAll(){//클럽리스트를 받아오는 함수
+      const getData = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
+      console.log("문서 길이"+getData.docs.length);
+      if(getData){//가져올 클럽데이터가 있으면 실행
+        getData.docs.forEach((doc,index)=>{
+          let thumbnail = 'https://via.placeholder.com/150';//엑박이미지
+          if(doc.data().club_thumbnail){//이미지가 있으면 썸네일 사용 없으면 엑박이미지 사용
+            thumbnail = doc.data().club_thumbnail;
+          }
+          const template =`
+          <div class="club-container" id="${doc.id}">
+            <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
+            <div class="flex-grow-1 p-4">
+                <h5 class="club-name">${doc.data().club_name}</h5>
+                <p class="club-info">${doc.data().club_info}</p>
+                <p class="float-end">❤️0</p>
+            </div>
           </div>
-        </div>
-        `
-      console.log(doc.id, " => ", doc.data());
-
-      const result = getDistanceFromLatLonInKm(myLat, myLng, doc.data().lat, doc.data().lng);
-      const distance = Math.round(result*1000)/1000;
-
-      console.log(Math.round(result*1000)/1000+"km");
-      
-      if(distance < area){//현재 위치에서 n km보다 가까우면 리스트에 출력
-        $('.club-list').append(template);
+          `;
+          $('.club-list').append(template);
+        })
       }
-
-      });
     }
-    getClubList(searchArea);
 
+    async function getClubList(searchArea){//범위에 따라클럽리스트를 받아오는 함수
+      const getData = await getDocs(collection(db, `club-category-${id}`));//데이터 받아오기
+      if(getData){
+        getData.docs.forEach((doc,index)=>{
+          let thumbnail = 'https://via.placeholder.com/150';//엑박이미지
+          if(doc.data().club_thumbnail){//이미지가 있으면 썸네일 사용 없으면 엑박이미지 사용
+            thumbnail = doc.data().club_thumbnail;
+          }
+          const template =`
+          <div class="club-container" id="${doc.id}">
+            <div class="thumbnail" style="background-image: url('${thumbnail}"></div>
+            <div class="flex-grow-1 p-4">
+                <h5 class="club-name">${doc.data().club_name}</h5>
+                <p class="club-info">${doc.data().club_info}</p>
+                <p class="float-end">❤️0</p>
+            </div>
+          </div>
+          `;
+          const result = getDistanceFromLatLonInKm(myLat, myLng, doc.data().lat, doc.data().lng);
+          const distance = Math.round(result*1000)/1000;
+          console.log(distance+"km");
+          //현재 위치에서 n km보다 가까우면 리스트에 출력
+          if(distance < searchArea) $('.club-list').append(template);
+        })
+    }
+  }
 
-    $(".club-categories").on("click",(e)=>{//버튼 눌렸을 때 페이지 이동
+    $(".club-category").on("click",(e)=>{//버튼 눌렸을 때 페이지 이동
       const pressedBtn = e.target.id;
       console.log(pressedBtn);
       location.href = `/clubList/${pressedBtn}`;
     })
-    
-    $("#btn-search-area").on("click", (e)=>{
+
+    $(document).on("click", ".club-container", (e)=>{//카테고리 클릭 시 페이지 이동
+      console.log("버튼 눌림");
+      const clubId = e.currentTarget.id;
+      location.href = `/clubMain/${id}/${clubId}`;
+    })
+
+    $("#btn-search-area").on("click", (e)=>{//검색버튼 클릭시 검색반경에 있는 클럽 받아옴
       e.preventDefault();
       $('.club-list').html("");
       const area = document.querySelector("#sel-search-area").value
       console.log(area+"km선택됨");
-      getClubList(area);
+      if(area==0){
+        getClubListAll();
+      }else{
+        getClubList(area);
+      }
     })
-    
+
     //위도 경도로 거리 구하는 함수
     function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
       function deg2rad(deg) {
-        return deg * (Math.PI/180)
+          return deg * (Math.PI/180)
       }
       var R = 6371; // Radius of the earth in km
       var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -114,21 +153,5 @@
       var d = R * c; // Distance in km
       return d; 
     }
-    
-    //클럽메인으로 이동
-    // $(".club-container").on("click", (e) => {
-    //   const clubId = e.currentTarget.id;
-    //   location.href = `/clubMain/${id}/${clubId}`;
-    // })
 
-    // $(".club-list").on("click", ".club-container", (e) => {
-    //   const clubId = e.currentTarget.id;
-    //   location.href = `/clubMain/${id}/${clubId}`;
-    // });
-    
-    $(document).on("click", ".club-container", (e)=>{//카테고리 클릭 시 페이지 이동
-      console.log("버튼 눌림");
-      const clubId = e.currentTarget.id;
-      location.href = `/clubMain/${id}/${clubId}`;
-    })
   </script>
