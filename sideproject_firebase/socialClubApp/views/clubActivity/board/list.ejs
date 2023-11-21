@@ -71,7 +71,7 @@
         console.log("row id =====> " + row.id);
         //여러 개의 쿼리문을 병합하는 코드 - spread연산자(원본 가져옴) -> 열거형 연산자(,) 활용 : 새로운 배열객체 생성
         //  1차 머지: 해당 글의 아이디 값을 가져와 배열에 추가하기(존재하지 않는 컬럼(id:row.id)으로 시작)
-        rows.push({id:row.id,...row.data(), });
+        rows.push({rid:row.id,category:category,id:clubId,...row.data()});
         console.log(rows); //원본에 id키를 갖는 값이 들어갔나?
         let temp = Handlebars.compile($('#temp').html());
         $('#boards').html(temp(rows));
