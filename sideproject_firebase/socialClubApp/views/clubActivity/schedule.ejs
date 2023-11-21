@@ -1,0 +1,37 @@
+<div><h1>모임일정</h1></div>
+<%-include("clubNav.ejs")%>
+<div class="calendar-container">
+  <div id="calendar">
+</div>
+<div class="text-center mt-3">
+  <button class="btn-primary btn px-5">일정추가</button>
+</div>
+</div>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, getDocs, doc, deleteDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  const db = getFirestore(app);
+  let clubEvent = [];
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
+  document.addEventListener('DOMContentLoaded', async function() {
+    const calendarEl = document.querySelector('#calendar');
+    //캘린더 객체생성하기 및 생성자 호출 - 초기화 속성값지정
+    const snapshot = await getDocs(collection(db, `club-category-${category}/${clubId}/schedule`));
+    snapshot.docs.forEach((doc)=>{
+      clubEvent.push(doc.data());
+    })
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left:"prev, next, today",
+        center: "title",
+        right: "dayGridMonth, timeGridWeek, listWeek"
+      },
+      //일정에 대한 데이터셋 가져오기
+      events:clubEvent
+    });
+    calendar.render();//위에서 초기화된 정보로 달력을 그려줘
+  });
+</script>

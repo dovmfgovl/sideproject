@@ -19,7 +19,9 @@
 <script type="module">
   import { app } from "/javascripts/firebase.js";
   import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+  import {getFirestore,addDoc,setDoc,getDoc,getDocs,collection, doc} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
   const auth = getAuth(app);
+  const db = getFirestore(app);
   console.log(auth);
 
   $(frm).on("submit", (e)=>{
@@ -30,8 +32,15 @@
     console.log(`${email} ${password}`);
 
     createUserWithEmailAndPassword(auth, email, password)
-    .then((response) => {
-      console.log(response);
+    .then(async(response) => {
+      const uid = response.user.uid;
+      const email = response.user.email;
+      console.log(response.user.email);
+      await setDoc(doc(db,`users/${uid}`),{
+        user_id:email,
+        user_email:email
+      })
+      alert("회원가입이 완료되었습니다. 로그인 후 지역을 설정해주세요")
       location.href = "/login"
     }).catch((error) => alert(error.message) );
   })//end of create user

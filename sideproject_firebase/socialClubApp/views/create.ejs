@@ -15,7 +15,7 @@
     <input type="text"  id="get-address" placeholder="주소">
     <input type="button" id="btn_search" value="주소 검색"><br>
     <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
-    <textarea placeholder="상세주소" class="form-control mt-2" id="club-loc-detail"></textarea>
+    <!-- <textarea placeholder="상세주소" class="form-control mt-2" id="club-loc-detail"></textarea> -->
     <div class='create-meeting'>모임 이름</div>
     <textarea placeholder="모임 이름" class="form-control mt-2" id="club-name"></textarea>
     <div class='create-meeting'>모임 목표</div>
@@ -41,7 +41,7 @@
       const data = {
             club_category: category,
             club_loc: document.querySelector("#get-address").value,
-            club_loc_detail: document.querySelector("#club-loc-detail").value,
+            // club_loc_detail: document.querySelector("#club-loc-detail").value,
             club_name: document.querySelector("#club-name").value,
             club_aim: document.querySelector("#club-aim").value,
             lat: lat,
@@ -57,6 +57,10 @@
                 await setDoc(albumRef,{test:"앨범생성문자"});
                 const scheduleRef = doc(collection(db, `club-category-${category}`, docRef.id, "schedule"));
                 await setDoc(scheduleRef,{test:"일정관리생성문자"});
+                const commentRef = doc(collection(db, `club-category-${category}`, docRef.id, "comment"));
+                await setDoc(commentRef,{test:"코멘트생성문자"});
+                const infoRef = doc(collection(db, `club-category-${category}`, docRef.id, "info"));
+                await setDoc(infoRef,{test:"info생성문자"});
             })
             .catch((error) => {
                 console.error("Error adding document: ", error);
@@ -91,7 +95,7 @@
               oncomplete: function(data) {
                   var addr = data.address; // 최종 주소 변수
                   // 주소 정보를 해당 필드에 넣는다.
-                  document.getElementById("get-address").value = addr;
+                  document.getElementById("get-address").value = data.sigungu;
                   // 주소로 상세 정보를 검색
                   geocoder.addressSearch(data.address, function(results, status) {
                       // 정상적으로 검색이 완료됐으면

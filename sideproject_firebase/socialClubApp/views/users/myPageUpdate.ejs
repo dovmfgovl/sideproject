@@ -1,0 +1,123 @@
+<div class="row my-5">
+  <div class="col">
+    <h1 class="text-center mb-5">회원정보수정</h1>
+    <div class="user-update-card p-5">
+      <form name="frm" method="post">
+        <img
+        id="fileName"
+        src="https://via.placeholder.com/200x200"
+        width="25%"/>
+        <div class="input-group my-2">
+          <div class="input-group-text px-5">닉네임</div>
+          <input class="form-control" name="nickname" placeholder="닉네임을 설정해주세요" />
+        </div>
+        <div class="input-group my-2">
+          <div class="input-group-text px-5">내지역</div>
+          <input class="form-control" name="location" id="get-location" placeholder="내 지역을 설정해주세요">
+          <input type="button" id="mylocation-search" value="지역검색"><br>
+        </div>
+        <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+        <div>
+          <!-- <img
+            id="fileName"
+            src="https://via.placeholder.com/200x200"
+            width="25%"
+          /> -->
+          <input class="form-control mt-2" type="file" name="file" />
+        </div>
+        <div class="text-center mt-3">
+          <button class="btn-primary btn px-5">정보수정</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=565e87d4d275f2f9ad51401b785b8ad2&libraries=services"></script>
+
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import {getFirestore,addDoc,setDoc,getDoc,getDocs,collection, doc} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  import {getStorage, uploadBytes, ref, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const uid = localStorage.getItem("uid");
+  const email = localStorage.getItem("email");
+  console.log(uid);
+
+  let lat;//위도 받을 변수
+  let lng;//경도 받을 변수
+
+  $(frm).on("submit", async(event)=>{
+    event.preventDefault();
+    if(window.confirm("회원정보 변경하시겠습니까?")){
+      let nickName = $(frm.nickname).val();
+      let location = $(frm.location).val();
+      await setDoc(doc(db,`users/${uid}`),{
+      user_id:nickName,
+      user_email:email,
+      lat:lat,
+      lng:lng,
+      my_area:location
+      })
+      console.log(lat);
+      console.log(lng);
+    }
+  })
+
+  $(frm.file).on("change", function(e){//파일정보가 변경되었을때를 감지
+    $("#fileName").attr("src", URL.createObjectURL(e.target.files[0]));
+  })
+
+  document.querySelector("#mylocation-search").addEventListener("click",()=>{
+      execPostcode();
+  })
+
+  var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+  mapOption = {
+      center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+      level: 5 // 지도의 확대 레벨
+  };
+
+  //지도를 미리 생성
+  var map = new daum.maps.Map(mapContainer, mapOption);
+  //주소-좌표 변환 객체를 생성
+  var geocoder = new daum.maps.services.Geocoder();
+  //마커를 미리 생성
+  var marker = new daum.maps.Marker({
+  position: new daum.maps.LatLng(37.537187, 127.005476),
+  map: map
+  });
+
+  async function execPostcode(){
+  new daum.Postcode({
+      oncomplete: function(data) {
+          var addr = data.address; // 최종 주소 변수
+          // 주소 정보를 해당 필드에 넣는다.
+          document.getElementById("get-location").value = data.sigungu;
+          console.log(data.sigungu);
+          // 주소로 상세 정보를 검색
+          geocoder.addressSearch(data.address, function(results, status) {
+              // 정상적으로 검색이 완료됐으면
+              if (status === daum.maps.services.Status.OK) {
+                  var result = results[0]; //첫번째 결과의 값을 활용
+                  // 해당 주소에 대한 좌표를 받아서
+                  var coords = new daum.maps.LatLng(result.y, result.x);
+                  // 지도를 보여준다.
+                  mapContainer.style.display = "block";
+                  map.relayout();
+                  // 지도 중심을 변경한다.
+                  map.setCenter(coords);
+                  const center = map.getCenter();
+                  lat = center.getLat()
+                  lng = center.getLng()
+                  // 마커를 결과값으로 받은 위치로 옮긴다.
+                  marker.setPosition(coords)
+              }
+          });
+      }
+  }).open();
+  }
+
+</script>

@@ -1,0 +1,43 @@
+<%-include("clubNav.ejs")%>
+<div class="row my-5">
+  <div class="col">
+      <h1 class="text-center mb-3">클럽정보</h1>
+      <div id="clubinfo-page"></div>
+      <div class="text-center my-3">
+          <a href="#">
+              <button class="btn btn-primary px-5">정보수정</button>
+          </a>
+      </div>
+  </div>
+</div>
+<!--마이페이지 템플릿-->
+<script id="temp_clubpage" type="text/x-handlebars-template">
+  <div class="club-card">
+      <div class="row p-3">
+          <div class="col-md-4 col-lg-5 text-center">
+              <img src="{{photo}}" style="width:60%;border-radius:50%;">
+          </div>
+          <div class="col mt-3">
+              <h5>클럽명: {{name}}</h5>
+              <hr>
+              <div class="my-3">활동분야: {{category}}</div>
+              <div class="my-3">지역: {{address}}</div>
+              <div class="my-3">클럽목표: {{club_aim}}</div>
+          </div>
+      </div>
+  </div>
+</script>
+
+
+
+<script>
+    let user ={
+    name: "댕댕사랑",
+    photo: "http://via.placeholder.com/150x150",
+    address: "연수동",
+    club_aim: "댕댕이 보호",
+    category: "pet"
+    }
+    const temp = Handlebars.compile($("#temp_clubpage").html());
+    $("#clubinfo-page").html(temp(user));
+</script>

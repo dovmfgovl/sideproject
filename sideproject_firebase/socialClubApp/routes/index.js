@@ -22,27 +22,23 @@ router.get('/clubMain/:category/:clubId', function(req, res, next) {
   let clubId = req.params.clubId
   res.render('index', { title: '클럽메인' , pageName: "clubMain.ejs", id:category, id2:clubId});
 });
-// router.get('/clubMain/:category/:clubId', function(req, res, next) { 
-//   let category = req.params.category
-//   let clubId = req.params.clubId
-//   res.render('index', { title: '글목록', pageName:"clubActivity/board/list.ejs", id:category, id2:clubId });
-// });
 router.get('/clubMain/:category/:clubId/write', function(req, res, next) { 
   let category = req.params.category
   let clubId = req.params.clubId
   res.render('index', { title: '글쓰기', pageName:"clubActivity/board/write.ejs", id:category, id2:clubId });
 });
-router.get('/clubMain/:category/:clubId/:readId', function(req, res, next) { 
+router.get('/clubMain/:category/:clubId/detail/:readId', function(req, res, next) { 
   let category = req.params.category
   let clubId = req.params.clubId
   let readId = req.params.readId
   res.render('index', { title: '글 상세보기', pageName:"clubActivity/board/read.ejs", id:category, id2:clubId, id3:readId });
 });
-///clubMain/:category/:clubId/:readId
-// router.get('/board/update/:id', function(req, res, next) { //app.js -> path 라이브러리 __dirname, views
-//   let id = req.params.id;
-//   res.render('index', { title: '글수정', pageName:"board/update.ejs", id: id });
-// });
+router.get('/clubMain/:category/:clubId/update/:readId', function(req, res, next) {
+  let category = req.params.category
+  let clubId = req.params.clubId
+  let readId = req.params.readId
+  res.render('index', { title: '글수정', pageName:"clubActivity/board/update.ejs", id:category, id2:clubId, id3:readId });
+});
 router.get('/clubMain/:category/:clubId/album', function(req, res, next) { 
   let category = req.params.category
   let clubId = req.params.clubId
@@ -57,6 +53,16 @@ router.get('/clubMain/:category/:clubId/comment', function(req, res, next) {
   let category = req.params.category
   let clubId = req.params.clubId
   res.render('index', { title: '코멘트' , pageName: "clubActivity/comment.ejs", id:category, id2:clubId});
+});
+router.get('/clubMain/:category/:clubId/schedule', function(req, res, next) {
+  let category = req.params.category
+  let clubId = req.params.clubId
+  res.render('index', { title: '일정관리' , pageName: "clubActivity/schedule.ejs", id:category, id2:clubId});
+});
+router.get('/clubMain/:category/:clubId/info', function(req, res, next) {
+  let category = req.params.category
+  let clubId = req.params.clubId
+  res.render('index', { title: '클럽정보' , pageName: "clubActivity/info.ejs", id:category, id2:clubId});
 });
 
 module.exports = router;
