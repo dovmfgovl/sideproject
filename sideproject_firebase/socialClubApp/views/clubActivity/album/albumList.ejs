@@ -31,15 +31,15 @@
 
 <!-- list_album 안에 들어갈 템플릿 작성하기 -->
 <script id="temp_pic" type="text/x-handlebars-template">
-  {{#each documents}}
+  {{#each .}}
   <div class="col-6 col-md-4 col-lg-2">
     <div class="card my-1">
       <div class="card-body">
-        <img id="{{rid}}" src="{{this}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;" data-bs-toggle="modal" data-bs-target="#picturemodal">
+        <img id="{{rid}}" src="{{photo}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;" data-bs-toggle="modal" data-bs-target="#picturemodal">
       </div>
       <div class="card-footer" style="font-size: 0.7rem;">
         <div class="text-center">
-          <span>{{lookup ../titles @index}} / {{lookup ../dates @index}}</span>
+          <span>{{title}} / {{date}} / {{email}}</span>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@
   
 <script type="module">
   import { app } from "/javascripts/firebase.js";
-  import { getFirestore, setDoc, doc, getDocs, collection, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  import { getFirestore, setDoc, doc, getDocs, collection, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
   const db = getFirestore(app);
   const category = "<%=id%>";
   const clubId = "<%=id2%>";
@@ -83,9 +83,7 @@
   getList();
 
   async function getList(){ 
-    let photoURLs = []; // 사진 URL을 저장할 배열
-    let titles = []; // title을 저장할 배열
-    let dates = []; // date를 저장할 배열
+    let rows = [];
   
     const querySnapshot = await getDocs(collection(db, `club-category-${category}`, clubId, 'album'));
     querySnapshot.forEach((doc) => {
@@ -93,15 +91,14 @@
     console.log(doc.data().photo); //저장되어 있는 사진 URL
     console.log(doc.data().title);
     console.log(doc.data().date);
-    photoURLs.push(doc.data().photo); // URL을 배열에 추가
-    titles.push(doc.data().title);
-    dates.push(doc.data().date);
+    console.log(doc.data().email);
+    rows.push({rid: doc.id, photo: doc.data().photo, title: doc.data().title, date: doc.data().date, email: doc.data().email});
   });
 
   //핸들바스 템플릿을 가져온다.
   const temp = Handlebars.compile($('#temp_pic').html());
   //위에서 읽어온 템플릿(반복문 적용된) 결과를 div 태그 내부에 끼워넣기
-  $('#list_album').html(temp({ documents: photoURLs, titles, dates })); // Handlebars에 전달하는 객체에 사진 URL, title, date 배열 추가
+  $('#list_album').html(temp(rows)); // Handlebars에 전달하는 객체에 사진 URL, title, date 배열 추가
   }//end of getList
 
   //개발자 센터 > application > storage > Local storage
@@ -124,17 +121,18 @@
     $('#modalImage').attr('src', imageUrl);
   });
 
-  const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'album'), readId));
-  const row = snapshot.data();  
+  //const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'album'), readId));
+  const row = querySnapshot.data();  
   console.log(row);  
   if( email == row.email){
     $('#btn-group').toggle();
   }
   // 사진 삭제
   $("#btn-delete").on('click', async function(){ 
-    $(".card-body img").attr()
+    //$(".card-body img").attr()
+    console.log("삭제");
     if(confirm(readId+"번 사진 삭제할거니?")){
-      await deleteDoc(doc(collection((db, `club-category-${category}`, clubId, 'album'), readId)));
+      await deleteDoc(doc(collection(db, `club-category-${category}`, clubId, 'album')));
       //삭제 후 목록페이지로 돌아감
       location.href = "/clubMain/<%=id%>/<%=id2%>/album";
     }
