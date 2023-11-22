@@ -35,7 +35,7 @@
   <div class="col-6 col-md-4 col-lg-2">
     <div class="card my-1">
       <div class="card-body">
-        <img src="{{this}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;" data-bs-toggle="modal" data-bs-target="#picturemodal">
+        <img id="{{rid}}" src="{{this}}" alt="앨범사진" style="cursor: pointer; width: 130%; padding-right: 20PX;" data-bs-toggle="modal" data-bs-target="#picturemodal">
       </div>
       <div class="card-footer" style="font-size: 0.7rem;">
         <div class="text-center">
@@ -47,33 +47,29 @@
   {{/each}}
 </script>
 
-<script id="temp_pic_modal" type="text/x-handlebars-template">
-  {{#each documents}}
-  <div class="modal fade" id="picturemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="picturemodalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="picturemodalLabel">{{title}} by {{email}}</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="picturemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="picturemodalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="picturemodalLabel"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="큰 이미지" style="width: 100%;">
+      </div>
+      <div class="modal-footer">
+        <div class="text-end mb-2" id="btn-group" style="display:none">
+          <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
         </div>
-        <div class="modal-body">
-          <img id="modalImage" src="" alt="큰 이미지" style="width: 100%;">
-        </div>
-        <div class="modal-footer">
-          <div class="text-end mb-2" id="btn-group" style="display:none">
-            <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
-          </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
       </div>
     </div>
   </div>
-  {{/each}}
-</script>
+</div>
   
 <script type="module">
   import { app } from "/javascripts/firebase.js";
-  import { getFirestore, setDoc, doc, getDocs, collection } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
+  import { getFirestore, setDoc, doc, getDocs, collection, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js';
   const db = getFirestore(app);
   const category = "<%=id%>";
   const clubId = "<%=id2%>";
@@ -90,8 +86,10 @@
     let photoURLs = []; // 사진 URL을 저장할 배열
     let titles = []; // title을 저장할 배열
     let dates = []; // date를 저장할 배열
+  
     const querySnapshot = await getDocs(collection(db, `club-category-${category}`, clubId, 'album'));
     querySnapshot.forEach((doc) => {
+    console.log(doc.id);
     console.log(doc.data().photo); //저장되어 있는 사진 URL
     console.log(doc.data().title);
     console.log(doc.data().date);
@@ -104,9 +102,6 @@
   const temp = Handlebars.compile($('#temp_pic').html());
   //위에서 읽어온 템플릿(반복문 적용된) 결과를 div 태그 내부에 끼워넣기
   $('#list_album').html(temp({ documents: photoURLs, titles, dates })); // Handlebars에 전달하는 객체에 사진 URL, title, date 배열 추가
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const temp2 = Handlebars.compile($('#temp_pic_modal').html())
-
   }//end of getList
 
   //개발자 센터 > application > storage > Local storage
@@ -129,13 +124,19 @@
     $('#modalImage').attr('src', imageUrl);
   });
 
-  // if( email == )
-  // // 사진 삭제
-  // $("#btn-delete").on('click', async function(){ 
-  //   if(confirm(readId+"번 사진 삭제할거니?")){
-  //     await deleteDoc(doc(collection((db, `club-category-${category}`, clubId, 'album'), readId)));
-  //     //삭제 후 목록페이지로 돌아감
-  //     location.href = "/clubMain/<%=id%>/<%=id2%>/album";
-  //   }
-  // })
+  const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'album'), readId));
+  const row = snapshot.data();  
+  console.log(row);  
+  if( email == row.email){
+    $('#btn-group').toggle();
+  }
+  // 사진 삭제
+  $("#btn-delete").on('click', async function(){ 
+    $(".card-body img").attr()
+    if(confirm(readId+"번 사진 삭제할거니?")){
+      await deleteDoc(doc(collection((db, `club-category-${category}`, clubId, 'album'), readId)));
+      //삭제 후 목록페이지로 돌아감
+      location.href = "/clubMain/<%=id%>/<%=id2%>/album";
+    }
+  })
 </script>
