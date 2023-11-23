@@ -39,9 +39,9 @@
       </div>
       <div class="card-footer" style="font-size: 0.7rem;">
         <div class="text-center">
-          <span>{{title}}</span>
-          <span>{{date}}</span>
-          <span id="email">{{email}}</span>
+          <div>{{title}}</div>
+          <div>{{date}}</div>
+          <div id="email">{{email}}</div>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@
       </div>
       <div class="modal-footer">
         <div class="text-end mb-2" id="btn-group" style="display:none">
-          <button type="button" class="remail btn-danger" id="btn-delete">삭제</button>
+          <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
         </div>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
       </div>
@@ -134,40 +134,24 @@
     console.log(imageUrl);
     console.log(imageId);
     $('#modalImage').attr('src', imageUrl);
-    $('.text-end').attr('id', imageId);
-    if (albumEmail == userEmail) {
-    $(`#imageId`).show();
-    }    
-    //사진 삭제
-    $("#btn-delete").on('click', async function(){ 
-    console.log("삭제");
-    if(confirm( imageId +"번 사진 삭제할거니?")){
-      await deleteDoc(doc(collection(db, `club-category-${category}`, clubId, 'album'), imageId));
-      //삭제 후 목록페이지로 돌아감
-      location.href = "/clubMain/<%=id%>/<%=id2%>/album";
-    }
-  })
+
+    //앨범사진 업로드 이메일과 현재 로그인한 이메일이 같아야 삭제 버튼이 보임
+    if (albumEmail === userEmail) {
+      $("#btn-group").show();
+      // 사진 삭제 버튼 클릭 시
+      $("#btn-delete").off('click').on('click', async function() { 
+        console.log("삭제");
+        if(confirm( imageId +"번 사진 삭제하시겠습니까?")){
+          await deleteDoc(doc(collection(db, `club-category-${category}`, clubId, 'album'), imageId));
+          //삭제 후 목록페이지로 돌아감
+          location.href = "/clubMain/<%=id%>/<%=id2%>/album";
+        }
+      })
+    } else {
+    $("#btn-group").hide(); // 다른 이메일로 올린 사진인 경우 삭제 버튼 숨김
+    // 사진 삭제 버튼 클릭 시 이벤트 제거
+    $("#btn-delete").off('click');
+    }   
   });
-
-  // const snapshot = await getDocs(collection(db, `club-category-${category}`, clubId, 'album'));
-  // // const row = snapshot.data();
-  // // console.log('row ====> ' + row);  
-  // let row = [];
-  // snapshot.forEach((doc) => {
-  //   console.log(doc.data().email);
-  //   row.push({ rid: doc.id, email: doc.data().email, photo: doc.data().photo });
-  // })
-  // console.log('row ====> ' + row);
-
-  // 사진 삭제
-  // $("#btn-delete").on('click', async function(){ 
-  //   //$(".card-body img").attr()
-  //   console.log("삭제");
-  //   if(confirm(+"번 사진 삭제할거니?")){
-  //     await deleteDoc(doc(collection(db, `club-category-${category}`, clubId, 'album')));
-  //     //삭제 후 목록페이지로 돌아감
-  //     location.href = "/clubMain/<%=id%>/<%=id2%>/album";
-  //   }
-  // })
 }
 </script>
