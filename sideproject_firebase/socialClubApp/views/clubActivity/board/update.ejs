@@ -21,13 +21,17 @@
   const category = "<%=id%>";
   const clubId = "<%=id2%>";
   const readId = "<%=id3%>";
+  console.log(category);
+  console.log(clubId);
+  console.log(readId);
 
   let row = null;
 
   getRow();
   async function getRow(){
-    const snapshot = await getDoc(doc(collection(db, `club-category-${category}`, clubId, 'board'), readId));
+    const snapshot = await getDoc(doc(db, `club-category-${category}`, clubId, 'board', readId));
     row = snapshot.data();
+    console.log(row);
     $(frm.title).val(row.title);
     $(frm.body).val(row.body);
   }
@@ -40,7 +44,7 @@
     let title = $(frm.title).val();
     let body = $(frm.body).val();
     $('#modal-confirm').on("click", ".btn-primary", async() => { //수정하기 처리에 대한 콜백
-      await setDoc(doc(collection(db, `club-category-${category}`, clubId, 'board'), readId),{
+      await setDoc(doc(db, `club-category-${category}`, clubId, 'board', readId),{
         ...row, title, body
       });
       //성공하면 목록페이지로 간다

@@ -1,6 +1,6 @@
 *{
-  box-sizing: border-box;
-  /* border: 1px solid red; */
+  font-family: 'Black Han Sans', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 body {
   padding: 5%;
@@ -23,12 +23,12 @@ body {
 .category {  
   /* display: flex; */
   align-items: center;
-  border: 1px solid lightgray;
+  border: 1px solid rgb(255, 255, 255);
   border-radius: 15px;
   box-shadow: 3px 3px 5px 0px rgba(191, 191, 191, 0.53);
   transition: transform 250ms ease-in;
   cursor: pointer;
-  background-color: darkgray;
+  background-color: rgb(187, 236, 248);
 }
 
 .category:hover{

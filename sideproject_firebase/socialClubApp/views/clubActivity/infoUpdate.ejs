@@ -1,20 +1,24 @@
 <div class="row my-5">
   <div class="col">
-    <h1 class="text-center mb-5">회원정보수정</h1>
-    <div class="user-update-card p-5">
+    <h1 class="text-center mb-5">클럽정보수정</h1>
+    <div class="clubinfo-update-card p-5">
       <form name="frm" method="post">
         <img
         id="fileName"
         src="https://via.placeholder.com/200x200"
         width="25%"/>
         <div class="input-group my-2">
-          <div class="input-group-text px-5">닉네임</div>
-          <input class="form-control" name="nickname" placeholder="닉네임을 설정해주세요" />
+          <div class="input-group-text px-5">클럽이름</div>
+          <input class="form-control" name="clubName" placeholder="클럽명을 설정해주세요" />
         </div>
         <div class="input-group my-2">
-          <div class="input-group-text px-5">내지역</div>
-          <input class="form-control" name="location" id="get-location" placeholder="내 지역을 설정해주세요">
-          <input type="button" id="mylocation-search" value="지역검색"><br>
+          <div class="input-group-text px-5">클럽목표</div>
+          <input class="form-control" name="clubAim" placeholder="클럽목표를 설정해주세요" />
+        </div>
+        <div class="input-group my-2">
+          <div class="input-group-text px-5">활동지역</div>
+          <input class="form-control" name="location" id="get-location" placeholder="클럽활동 지역을 설정해주세요">
+          <input type="button" id="clublocation-search" value="지역검색"><br>
         </div>
         <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
         <div>
@@ -37,43 +41,54 @@
   import {getStorage, uploadBytes, ref, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
   const db = getFirestore(app);
   const storage = getStorage(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
 
-  const uid = localStorage.getItem("uid");
-  const email = localStorage.getItem("email");
-
-  let lat;//위도 받을 변수
-  let lng;//경도 받을 변수
+  
+  //현재 값을 받아서 보여줌
+  const snapshot = await getDoc(doc(db,`club-category-${category}/${clubId}`));
+  $(frm.clubName).attr('value',snapshot.data().club_name);
+  $(frm.clubAim).attr('value',snapshot.data().club_aim);
+  let lat = snapshot.lat;//위도 받을 변수
+  let lng = snapshot.lng;//경도 받을 변수
+  
 
   $(frm).on("submit", async(event)=>{
     event.preventDefault();
-    if(window.confirm("회원정보 변경하시겠습니까?")){
-      let nickName = $(frm.nickname).val();
-      let location = $(frm.location).val();
+    if(window.confirm("클럽정보 변경하시겠습니까?")){
+      let clubName = $(frm.clubName).val();
+      let clubAim = $(frm.clubAim).val();
+      let loc = $(frm.location).val();
 
       if(frm.file.files[0]){//사진이 수정되는 경우
-        const snapshot = await uploadBytes(ref(storage,`/userPhoto/${Date.now()}.jpg`), frm.file.files[0]);
+        const snapshot = await uploadBytes(ref(storage,`/clubPhoto/${Date.now()}.jpg`), frm.file.files[0]);
         const url = await getDownloadURL(snapshot.ref);
         console.log(url);
-        await setDoc(doc(db,`users/${uid}`),{
-        user_id:nickName,
-        user_email:email,
+
+        await setDoc(doc(db,`club-category-${category}/${clubId}`),{
+        category:category,
+        club_name:clubName,
+        club_loc:loc,
         lat:lat,
         lng:lng,
-        my_area:location,
-        user_photo:url
+        club_aim:clubAim,
+        club_photo:url
         })
       }
       else{//사진정보는 수정하지 않는 경우 - 기존의 사진정보의 url을 다시 넣어준다. 안넣으면 null
         const photo = $("#fileName").attr("src");
-        await setDoc(doc(db,`users/${uid}`),{
-        user_id:nickName,
-        user_email:email,
+        await setDoc(doc(db,`club-category-${category}/${clubId}`),{
+        category:category,
+        club_name:clubName,
+        club_loc:loc,
         lat:lat,
         lng:lng,
-        my_area:location,
-        user_photo:photo
+        club_aim:clubAim,
+        club_photo:photo
         })
       }
+      alert("정보가 수정되었습니다.")
+      location.href = `/clubMain/${category}/${clubId}`;
     }
   })
 
@@ -81,7 +96,7 @@
     $("#fileName").attr("src", URL.createObjectURL(e.target.files[0]));
   })
 
-  document.querySelector("#mylocation-search").addEventListener("click",()=>{
+  document.querySelector("#clublocation-search").addEventListener("click",()=>{
       execPostcode();
   })
 
@@ -108,6 +123,7 @@
           // 주소 정보를 해당 필드에 넣는다.
           document.getElementById("get-location").value = `${data.sigungu} ${data.bname}`;
           console.log(data.sigungu);
+          console.log(data.bname);
           // 주소로 상세 정보를 검색
           geocoder.addressSearch(data.address, function(results, status) {
               // 정상적으로 검색이 완료됐으면

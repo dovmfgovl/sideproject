@@ -1,10 +1,12 @@
+
 <%-include("clubNav.ejs")%>
+
 <div class="row my-5">
   <div class="col">
       <h1 class="text-center mb-3">클럽정보</h1>
       <div id="clubinfo-page"></div>
       <div class="text-center my-3">
-          <a href="#">
+          <a href="/clubMain/<%=id%>/<%=id2%>/infoUpdate">
               <button class="btn btn-primary px-5">정보수정</button>
           </a>
       </div>
@@ -18,26 +20,38 @@
               <img src="{{photo}}" style="width:60%;border-radius:50%;">
           </div>
           <div class="col mt-3">
-              <h5>클럽명: {{name}}</h5>
+              <h5>클럽명: {{club_name}}</h5>
               <hr>
               <div class="my-3">활동분야: {{category}}</div>
-              <div class="my-3">지역: {{address}}</div>
+              <div class="my-3">지역: {{club_loc}}</div>
               <div class="my-3">클럽목표: {{club_aim}}</div>
           </div>
       </div>
   </div>
 </script>
 
+<script type="module">
+  import { app } from "/javascripts/firebase.js";
+  import { getFirestore, collection, getDoc, doc, deleteDoc, query, where, addDoc, orderBy} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  const db = getFirestore(app);
+  const category = "<%=id%>";
+  const clubId = "<%=id2%>";
 
-
-<script>
     let user ={
-    name: "댕댕사랑",
+    club_name: "애견크럽",
     photo: "http://via.placeholder.com/150x150",
-    address: "연수동",
+    club_loc: "연수동",
     club_aim: "댕댕이 보호",
-    category: "pet"
+    club_category: "pet"
     }
+
+    const snapshot = await getDoc(doc(db,`club-category-${category}/${clubId}`));
+
+    if(snapshot.data()){
+        user = snapshot.data();
+        user = {...user,photo:snapshot.data().club_photo ? snapshot.data().club_photo:"http://via.placeholder.com/150x150"}
+    }
+
     const temp = Handlebars.compile($("#temp_clubpage").html());
     $("#clubinfo-page").html(temp(user));
 </script>

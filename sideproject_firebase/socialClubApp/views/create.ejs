@@ -26,7 +26,6 @@
   
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=565e87d4d275f2f9ad51401b785b8ad2&libraries=services"></script>
-  
   <script type="module">
   ///////////////////////////////////////////////////////////////////////////////////
   import { app } from "/javascripts/firebase.js";
@@ -51,16 +50,7 @@
       const docRef = addDoc(collection(db,`club-category-${category}`), data)
             .then(async(docRef) => {
                 console.log("Document written with ID: ", docRef.id);
-                const boardRef = doc(collection(db, `club-category-${category}`, docRef.id, "board"));
-                await setDoc(boardRef,{test:"게시판생성문자"})
-                const albumRef = doc(collection(db, `club-category-${category}`, docRef.id, "album"));
-                await setDoc(albumRef,{test:"앨범생성문자"});
-                const scheduleRef = doc(collection(db, `club-category-${category}`, docRef.id, "schedule"));
-                await setDoc(scheduleRef,{test:"일정관리생성문자"});
-                const commentRef = doc(collection(db, `club-category-${category}`, docRef.id, "comment"));
-                await setDoc(commentRef,{test:"코멘트생성문자"});
-                const infoRef = doc(collection(db, `club-category-${category}`, docRef.id, "info"));
-                await setDoc(infoRef,{test:"info생성문자"});
+                location.href = `/clubList/${data.club_category}`
             })
             .catch((error) => {
                 console.error("Error adding document: ", error);
@@ -95,7 +85,7 @@
               oncomplete: function(data) {
                   var addr = data.address; // 최종 주소 변수
                   // 주소 정보를 해당 필드에 넣는다.
-                  document.getElementById("get-address").value = data.sigungu;
+                  document.getElementById("get-address").value = `${data.sigungu} ${data.bname}`;
                   // 주소로 상세 정보를 검색
                   geocoder.addressSearch(data.address, function(results, status) {
                       // 정상적으로 검색이 완료됐으면

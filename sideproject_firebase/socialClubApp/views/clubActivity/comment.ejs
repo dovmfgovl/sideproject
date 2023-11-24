@@ -1,7 +1,5 @@
 <link rel="stylesheet" href="/stylesheets/comment.css">
 <%-include("clubNav.ejs")%>
-<div>모임댓글</div>
-
 <div class="wrap">
   <!-- 코멘트 들어 갈 곳 -->
 </div>
@@ -9,7 +7,7 @@
 <div class="row my-5">
   <div class="col">
       <form name="frm" method="post">
-          <textarea class="form-control" name="body" rows="2" placeholder="내용을 입력하세요."></textarea>
+          <input class="form-control" name="body" rows="2" placeholder="내용을 입력하세요."></input>
           <div class="text-center my-2">
               <button class="btn btn-primary">코멘트 입력</button>
           </div>
@@ -49,7 +47,7 @@
           const template =`
           <div class="chat ch1">
             <div class="icon"><i class="fa-solid fa-user"></i></div>
-            <div class="user-id">${doc.data().id}</div>
+            <div class="user-id">${doc.data().email}</div>
             <div class="textbox">${doc.data().comment}</div>
           </div>
           `
@@ -67,7 +65,7 @@
         let date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
         const data = {
           email:email,
-          comment:body, 
+          comment:body,
           date:date};
         await addDoc(collection(db,`club-category-${category}/${clubId}/comment`),data);
           location.href=`/clubMain/${category}/${clubId}/comment`;

@@ -47,7 +47,7 @@
     $('#btn-group').toggle();
   }
   $("#btn-update").on('click', async function(){ 
-    location.href = "/clubMain/`${category}`/`${clubId}`/update"+id;
+    location.href = "/clubMain/<%=id%>/<%=id2%>/update/"+readId;
   })
 
   // 글 삭제

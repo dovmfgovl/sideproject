@@ -60,10 +60,20 @@ router.get('/clubMain/:category/:clubId/schedule', function(req, res, next) {
   let clubId = req.params.clubId
   res.render('index', { title: '일정관리' , pageName: "clubActivity/schedule.ejs", id:category, id2:clubId});
 });
+router.get('/clubMain/:category/:clubId/scheduleUpdate', function(req, res, next) {
+  let category = req.params.category
+  let clubId = req.params.clubId
+  res.render('index', { title: '일정추가' , pageName: "clubActivity/scheduleUpdate.ejs", id:category, id2:clubId});
+});
 router.get('/clubMain/:category/:clubId/info', function(req, res, next) {
   let category = req.params.category
   let clubId = req.params.clubId
   res.render('index', { title: '클럽정보' , pageName: "clubActivity/info.ejs", id:category, id2:clubId});
+});
+router.get('/clubMain/:category/:clubId/infoUpdate', function(req, res, next) {
+  let category = req.params.category
+  let clubId = req.params.clubId
+  res.render('index', { title: '클럽정보업데이트' , pageName: "clubActivity/infoUpdate.ejs", id:category, id2:clubId});
 });
 
 module.exports = router;

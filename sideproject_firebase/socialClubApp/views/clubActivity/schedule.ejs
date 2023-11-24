@@ -1,12 +1,13 @@
-<div><h1>모임일정</h1></div>
 <%-include("clubNav.ejs")%>
+
 <div class="calendar-container">
   <div id="calendar">
 </div>
+
 <div class="text-center mt-3">
-  <button class="btn-primary btn px-5">일정추가</button>
+  <button class="btn-primary btn px-5" id="btn-add-schedule">일정추가</button>
 </div>
-</div>
+
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 <script type="module">
   import { app } from "/javascripts/firebase.js";
@@ -15,6 +16,11 @@
   let clubEvent = [];
   const category = "<%=id%>";
   const clubId = "<%=id2%>";
+
+  $("#btn-add-schedule").on("click",()=>{
+    location.href=`/clubMain/${category}/${clubId}/scheduleUpdate`;
+  })
+
   document.addEventListener('DOMContentLoaded', async function() {
     const calendarEl = document.querySelector('#calendar');
     //캘린더 객체생성하기 및 생성자 호출 - 초기화 속성값지정
