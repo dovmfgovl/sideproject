@@ -1,0 +1,44 @@
+server:
+  port: 8000
+  error:
+    path: /error
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+#maven에서 application.properties에서 처리하는 내용을
+#gradle 환경에서는 반복되는 낱말카드를 내려쓰기와 들여쓰기로 구분함 - 반복되는 문자열을 생략해 냄
+#spring.datasource.hikari.
+#spring.output.ansi.enabled=always
+#spring.mvc.view.prefix="/WEB-INF/views/"
+#spring.datasource.hikari.jdbc-url="jdbc:oracle:thin:@localhost:1521/orcl11"
+#spring.datasource.hikari.username=scott
+# 위와 같이 코드가 계속 반복되는 것을 gradle에서는 생략함(DatabaseConfiguration.java에서 prifix로 hikari)
+spring:
+  output:
+    ansi:
+      enabled: always
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  datasource:
+    hikari:
+      jdbc-url: jdbc:oracle:thin:@127.0.0.1:1521/orcl11
+      username: scott
+      password: tiger
+      driver-class-name: oracle.jdbc.OracleDriver
+      connection-timeout: 20000
+      validation-timeout: 3000
+      minimum-idle: 5
+      maximum-pool-size: 12
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      auto-commit: true # 건건마다 즉시 commit 일어남. 호출하지 않아도
+      pool-name: oraPool
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      enabled: true

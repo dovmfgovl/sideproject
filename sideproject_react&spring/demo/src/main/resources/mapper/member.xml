@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mybatis.mapper.MemberMapper">
+  <select id="currentTime" parameterType="string" resultType="string">
+    SELECT to_char(sysdate, 'YYYY-MM-DD') ctime FROM dual
+  </select>
+  <insert id="memberInsert" useGeneratedKeys="true" parameterType="map" keyColumn="mem_no" keyProperty="mem_no">
+    INSERT INTO member231228(mem_no, mem_id, mem_pw, mem_email
+                          , mem_name, zipcode, address, gubun, mem_picture)
+    VALUES(seq_member231228_no.NEXTVAL, #{mem_id, jdbcType=VARCHAR}, #{mem_pw, jdbcType=VARCHAR}, #{mem_email, jdbcType=VARCHAR}
+                                  , #{mem_name, jdbcType=VARCHAR}, #{zipcode, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}
+                                    , #{gubun, jdbcType=VARCHAR}, #{mem_picture, jdbcType=VARCHAR})
+  </insert>
+    <update id="memberUpdate" parameterType="map">
+        UPDATE member231228
+                set  gubun = 0
+        <if test='mem_pw != null and mem_pw.length > 0'>
+                      , mem_pw = #{mem_pw, jdbcType=VARCHAR}
+        </if>
+        <if test='mem_name != null and mem_name.length > 0'>
+                      , mem_name = #{mem_name, jdbcType=VARCHAR}
+        </if>
+        <if test='zipcode != null and zipcode.length > 0'>
+                      , zipcode = #{zipcode, jdbcType=VARCHAR}
+        </if>
+        <if test='address != null and address.length > 0'>
+                      , address = #{address, jdbcType=VARCHAR}
+        </if>
+        <if test='mem_email != null and mem_email.length > 0'>
+                      , mem_email = #{mem_email, jdbcType=VARCHAR}
+        </if>
+        <if test='mem_no != null and mem_no.length > 0'>
+        WHERE mem_no = #{mem_no}
+        </if>
+    </update>
+  <!--  
+    (xml주석은 html주석과 같다)
+    가정 : 회원등록 시 사진을 세 장 추가할 수 있다 -> list 사용
+    public int fileInsert(List<Map<String, Object>> picList)
+  -->
+  <insert id="fileInsert" parameterType="list"> <!-- list : 한번에 n건을 처리한다 -->
+    INSERT ALL
+        <foreach collection="list" item="item" index="index" separator=" "> <!-- collection: 자료구조 -->
+              INTO common_file(file_no, file_name, file_size) VALUES (seq_cfile_no.nextval, #{item.file_name}, #{item.file_size})
+    </foreach>
+  SELECT * FROM DUAL
+  </insert>
+</mapper>

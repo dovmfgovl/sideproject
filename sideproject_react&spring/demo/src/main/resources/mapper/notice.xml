@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mybatis.mapper.NoticeMapper">
+	<insert id="noticeInsert" parameterType="java.util.Map">
+		insert into  notice(n_no,  n_title, n_content, n_writer)
+		values(seq_notice_no.nextval, #{n_title}, #{n_content}, #{n_writer})
+	</insert>
+	<update id="noticeUpdate" parameterType="map">
+		update notice
+		      set n_title = #{N_TITLE}
+		          ,  n_content = #{N_CONTENT}
+		          ,  n_writer = #{N_WRITER}
+		  where n_no = #{N_NO}
+	</update>
+	<!-- 원시형 타입은 Key값이 존재하지 않기 때문에 n_no -> value로 변경 -->
+	<delete id="noticeDelete" parameterType="int">
+		delete from notice where n_no = #{value}  	
+	</delete>
+	<!--  
+		myBatis는 동적쿼리를 지원한다 - 조건에 따라 다르게 SQL문 동작가능함
+		현재 게시글이 한 건만 존재하는 경우는 배제되어야 한다. - 트랜잭션 처리 필요한 순간
+		commit, rollback 대상인 구문 : insert, update, delete
+		: 한 개의 메소드 안에서 XXXDao의 여러 메소드를 호출하는 경우가 발생할 때(업무적인 복잡도 높을 때) 
+			- 트랜잭션처리대상
+	-->
+	<select id="noticeList" parameterType="map"  resultType = "map">
+		select n_no, n_title, n_content, n_writer from notice
+		<where>
+			<if test="n_no!=null">AND n_no=#{n_no}</if>
+			<if test="gubun!=null">
+				<choose>
+					<when test='gubun.equals("n_title")'>
+						AND n_title LIKE '%'||#{keyword}||'%'
+					</when>
+					<when test='gubun.equals("n_content")'>
+						AND n_content LIKE '%'||#{keyword}||'%'
+					</when>
+					<when test='gubun.equals("n_writer")'>
+						AND n_writer LIKE '%'||#{keyword}||'%'
+					</when>
+				</choose>
+			</if>
+		</where>
+		order by n_no desc
+	</select> 
+</mapper>

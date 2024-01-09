@@ -1,0 +1,11 @@
+
+^javascript:S1481"6Remove the declaration of the unused 'gubun' variable.(¨åá‘ıÿÿÿÿ8Û·¹Î1
+[javascript:S1854"3Remove this useless assignment to variable "gubun".(¨åá‘ıÿÿÿÿ8Û·¹Î1
+ajavascript:S1481"9Remove the declaration of the unused 'setGubun' variable.(¨åá‘ıÿÿÿÿ8Û·¹Î1
+^javascript:S1854"6Remove this useless assignment to variable "setGubun".(¨åá‘ıÿÿÿÿ8Û·¹Î1
+`javascript:S1481"8Remove the declaration of the unused 'keyword' variable.(úãÒşÿÿÿÿ8Û·¹Î1
+]javascript:S1854"5Remove this useless assignment to variable "keyword".(úãÒşÿÿÿÿ8Û·¹Î1
+cjavascript:S1481";Remove the declaration of the unused 'setKeyword' variable.(úãÒşÿÿÿÿ8Û·¹Î1
+`javascript:S1854"8Remove this useless assignment to variable "setKeyword".(úãÒşÿÿÿÿ8Û·¹Î1
+ƒjavascript:S6582c"[Prefer using an optional chain expression instead, as it's more concise and easier to read.(è¸šùÿÿÿÿ8Û·¹Î1
+Fjavascript:S6479g"Do not use Array index in keys(¶£íâùÿÿÿÿ8Û·¹Î1

@@ -1,0 +1,15 @@
+
+Ajavascript:S125"Remove this commented out code.(³ñé8ÿá·¹Î1
+Fjavascript:S125"Remove this commented out code.(Ù»ºûÿÿÿÿ8ÿá·¹Î1
+^javascript:S1481"6Remove the declaration of the unused 'gubun' variable.(ˆ®úˆÿÿÿÿÿ8ÿá·¹Î1
+[javascript:S1854"3Remove this useless assignment to variable "gubun".(ˆ®úˆÿÿÿÿÿ8ÿá·¹Î1
+ajavascript:S1481"9Remove the declaration of the unused 'setGubun' variable.(ˆ®úˆÿÿÿÿÿ8ÿá·¹Î1
+^javascript:S1854"6Remove this useless assignment to variable "setGubun".(ˆ®úˆÿÿÿÿÿ8ÿá·¹Î1
+[javascript:S1481"8Remove the declaration of the unused 'keyword' variable.(ÍŞÎÆ8ÿá·¹Î1
+Xjavascript:S1854"5Remove this useless assignment to variable "keyword".(ÍŞÎÆ8ÿá·¹Î1
+^javascript:S1481";Remove the declaration of the unused 'setKeyword' variable.(ÍŞÎÆ8ÿá·¹Î1
+[javascript:S1854"8Remove this useless assignment to variable "setKeyword".(ÍŞÎÆ8ÿá·¹Î1
+Fjavascript:S125"Remove this commented out code.(ôÔßÿÿÿÿÿ8ÿá·¹Î1
+Ajavascript:S125("Remove this commented out code.(â£Ï£8ÿá·¹Î1
+~javascript:S6582a"[Prefer using an optional chain expression instead, as it's more concise and easier to read.(†¤ñØ8ÿá·¹Î1
+@javascript:S6479c"Do not use Array index in keys(à–ê88€â·¹Î1
