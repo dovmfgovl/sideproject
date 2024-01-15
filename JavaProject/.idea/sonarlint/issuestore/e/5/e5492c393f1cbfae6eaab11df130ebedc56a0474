@@ -1,0 +1,8 @@
+
+c
+java:S2095#"FUse try-with-resources or close this "Document" in a "finally" clause.(¯ü¦8¼ìéêĞ1
+T
+java:S1874&"2Remove this use of "createFont"; it is deprecated.(Ôåúøÿÿÿÿ8æìéêĞ1
+Q
+java:S2864+"4Iterate over the "entrySet" instead of the "keySet".(şüŸ8êìéêĞ1
+L	java:S1063"+Replace this use of System.out by a logger.(ó™ßüÿÿÿÿ8ğìéêĞ1

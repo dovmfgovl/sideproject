@@ -1,0 +1,24 @@
+
+c
+java:S2095""FUse try-with-resources or close this "Document" in a "finally" clause.(ï×8”×èëĞ1
+›
+java:S1130"yRemove the declaration of thrown exception 'java.net.MalformedURLException' which is a subclass of 'java.io.IOException'.(ÜÂ²Ëûÿÿÿÿ8ÚğğëĞ1
+š
+java:S1130"xRemove the declaration of thrown exception 'java.io.FileNotFoundException' which is a subclass of 'java.io.IOException'.(ÜÂ²Ëûÿÿÿÿ8ÚğğëĞ1
+›
+java:S1130"yRemove the declaration of thrown exception 'java.net.MalformedURLException' which is a subclass of 'java.io.IOException'.(Á¦¸üÿÿÿÿ8ÜğğëĞ1
+š
+java:S1130"xRemove the declaration of thrown exception 'java.io.FileNotFoundException' which is a subclass of 'java.io.IOException'.(Á¦¸üÿÿÿÿ8ÜğğëĞ1
+N
+java:S1874("2Remove this use of "createFont"; it is deprecated.(¼‚’8“ÇàëĞ1
+O
+java:S1874)"2Remove this use of "createFont"; it is deprecated.(ó™“Ì8”ÇàëĞ1
+G	java:S106]"+Replace this use of System.out by a logger.(³¡õå8ÇàëĞ1
+n
+java:S3457b"Q%n should be used in place of \n to produce the platform-specific line separator.(•Ú8 ÇàëĞ1
+G	java:S106b"+Replace this use of System.out by a logger.(•Ú8 ÇàëĞ1
+L	java:S106c"+Replace this use of System.out by a logger.(úŒ­¤şÿÿÿÿ8 ÇàëĞ1
+L	java:S106e"+Replace this use of System.out by a logger.(›ÔÄ¥ÿÿÿÿÿ8¡ÇàëĞ1
+G	java:S106g"+Replace this use of System.out by a logger.(Ì÷¶ª8¡ÇàëĞ1
+G	java:S106i"+Replace this use of System.out by a logger.(åû˜º8¡ÇàëĞ1
+L	java:S106k"+Replace this use of System.out by a logger.(˜Æ»üÿÿÿÿ8¡ÇàëĞ1

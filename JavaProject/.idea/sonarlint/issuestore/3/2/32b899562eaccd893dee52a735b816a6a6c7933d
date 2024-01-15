@@ -1,0 +1,17 @@
+
+c
+java:S2095"FUse try-with-resources or close this "Workbook" in a "finally" clause.(šÇö8áê›çĞ1
+o
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(Çµí‘8‘Ï™çĞ1
+G	java:S106"+Replace this use of System.out by a logger.(ê„®†8˜Ï™çĞ1
+G	java:S106!"+Replace this use of System.out by a logger.(¼î¢Å8˜Ï™çĞ1
+L	java:S106#"+Replace this use of System.out by a logger.(ÑÒÁÒüÿÿÿÿ8™Ï™çĞ1
+G	java:S106)"+Replace this use of System.out by a logger.(õ‡ªÓ8™Ï™çĞ1
+L	java:S106-"+Replace this use of System.out by a logger.(‘ÉíÚøÿÿÿÿ8šÏ™çĞ1
+L	java:S1061"+Replace this use of System.out by a logger.(Ş÷“ûûÿÿÿÿ8šÏ™çĞ1
+G	java:S1064"+Replace this use of System.out by a logger.(Û‚öà8›Ï™çĞ1
+G	java:S1067"+Replace this use of System.out by a logger.(Û‚öà8ÔËšçĞ1
+G	java:S106;"+Replace this use of System.out by a logger.(«ï÷ş8ÖËšçĞ1
+G	java:S106>"+Replace this use of System.out by a logger.(öåìŠ8ÖËšçĞ1
+g
+java:S1128"JRemove this unused import 'org.apache.poi.ss.formula.functions.DateValue'.(»¦ò´8îê›çĞ1
