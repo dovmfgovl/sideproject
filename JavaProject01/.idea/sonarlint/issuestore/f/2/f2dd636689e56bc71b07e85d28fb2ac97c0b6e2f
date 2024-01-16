@@ -1,0 +1,23 @@
+
+L	java:S106
+"+Replace this use of System.out by a logger.(û¸Ñ…ùÿÿÿÿ8À³Ñ1
+L	java:S106"+Replace this use of System.out by a logger.(‘˜ÙÂşÿÿÿÿ8À³Ñ1
+G	java:S106"+Replace this use of System.out by a logger.(ºÉŞ‚8À³Ñ1
+L	java:S106"+Replace this use of System.out by a logger.(á’£Öÿÿÿÿÿ8À³Ñ1
+F	java:S106"+Replace this use of System.out by a logger.(²ÖÈZ8À³Ñ1
+F	java:S106"+Replace this use of System.out by a logger.(ÃÃ¯8‘À³Ñ1
+G	java:S106"+Replace this use of System.out by a logger.(û†¬8‘À³Ñ1
+L	java:S106"+Replace this use of System.out by a logger.(ìš´¤úÿÿÿÿ8‘À³Ñ1
+L	java:S106!"+Replace this use of System.out by a logger.(Ûéøúüÿÿÿÿ8‘À³Ñ1
+G	java:S106$"+Replace this use of System.out by a logger.(£ØŞæ8‘À³Ñ1
+G	java:S106,"+Replace this use of System.out by a logger.(†ÎÆö8’À³Ñ1
+W
+java:S6213-":Rename this variable to not match a restricted identifier.(·Í¾ü8’À³Ñ1
+G	java:S106."+Replace this use of System.out by a logger.(©”íç8’À³Ñ1
+G	java:S106/"+Replace this use of System.out by a logger.(Àò«ª8’À³Ñ1
+G	java:S1060"+Replace this use of System.out by a logger.(ß¤ÿ8’À³Ñ1
+G	java:S1061"+Replace this use of System.out by a logger.(æ‘8’À³Ñ1
+L	java:S1062"+Replace this use of System.out by a logger.(Ãúÿ¤üÿÿÿÿ8’À³Ñ1
+L	java:S1063"+Replace this use of System.out by a logger.(…‰¬ùÿÿÿÿ8’À³Ñ1
+G	java:S1064"+Replace this use of System.out by a logger.(ÇØú8’À³Ñ1
+L	java:S1068"+Replace this use of System.out by a logger.(øºÑûúÿÿÿÿ8“À³Ñ1
